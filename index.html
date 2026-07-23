@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Dashboard Rekapitulasi Kepesertaan dan Klaim BPJS Ketenagakerjaan 2025">
+<title>Rekap BPJS Ketenagakerjaan 2025</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
+<style>
+/* =============================================
+   CVD-SAFE PALETTE
+   Biru  #1a56a8  — utama / PU
+   Oranye #c45c00 — sekunder / BPU
+   Teal  #0b7a6e  — tersier / Jakon
+   Amber #f59e0b  — aksen
+   Abu   #f1f5f9  — zebra/bg
+   ============================================= */
+:root{
+  --biru:#1a56a8;--biru-tua:#0f3572;--biru-muda:#dbeafe;--biru-bg:#eff6ff;
+  --oranye:#c45c00;--oranye-bg:#fff7ed;
+  --teal:#0b7a6e;--teal-bg:#f0fdfa;
+  --amber:#f59e0b;
+  --abu:#f1f5f9;--abu2:#e2e8f0;--border:#cbd5e1;
+  --teks:#0f172a;--teks2:#475569;--teks3:#94a3b8;
+  --putih:#ffffff;
+  --radius:10px;--radius-sm:6px;
+  --shadow:0 1px 4px rgba(0,0,0,.08);
+  --shadow-md:0 4px 16px rgba(0,0,0,.1);
+  --transition:.18s ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f0f4f9;color:var(--teks);font-size:14px;line-height:1.5;min-height:100vh;display:flex;flex-direction:column}
+
+/* ===== HEADER ===== */
+.site-header{background:linear-gradient(135deg,var(--biru-tua) 0%,var(--biru) 100%);color:var(--putih);padding:18px 16px 16px}
+.header-inner{max-width:1100px;margin:0 auto}
+.header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.header-title h1{font-size:clamp(15px,3vw,20px);font-weight:700;line-height:1.3}
+.header-title p{font-size:12px;opacity:.75;margin-top:3px}
+.header-stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-sm);padding:8px 14px;text-align:right;white-space:nowrap;flex-shrink:0}
+.header-stat .st-label{font-size:10px;opacity:.75;letter-spacing:.3px}
+.header-stat .st-val{font-size:20px;font-weight:800;line-height:1.2}
+.header-stat .st-sub{font-size:10px;opacity:.65}
+
+/* ===== NAV ===== */
+.site-nav{background:var(--putih);border-bottom:2px solid var(--biru);overflow-x:auto;-webkit-overflow-scrolling:touch;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+.nav-inner{display:flex;max-width:1100px;margin:0 auto;min-width:max-content}
+.nav-btn{display:flex;align-items:center;gap:6px;padding:11px 14px;font-size:13px;font-weight:600;color:var(--teks2);border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:var(--transition);white-space:nowrap}
+.nav-btn svg{width:16px;height:16px;flex-shrink:0}
+.nav-btn.active{color:var(--biru);border-bottom-color:var(--biru)}
+.nav-btn:hover:not(.active){color:var(--biru);background:var(--biru-bg)}
+
+/* ===== LAYOUT ===== */
+.main{flex:1;max-width:1100px;margin:0 auto;width:100%;padding:16px}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ===== KPI GRID ===== */
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+@media(min-width:640px){.kpi-grid{grid-template-columns:repeat(4,1fr)}}
+.kpi-card{background:var(--putih);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);border-left:4px solid var(--biru);position:relative;overflow:hidden}
+.kpi-card.orange{border-left-color:var(--oranye)}
+.kpi-card.teal{border-left-color:var(--teal)}
+.kpi-card.amber{border-left-color:var(--amber)}
+.kpi-icon{position:absolute;top:10px;right:10px;opacity:.12;width:32px;height:32px}
+.kpi-label{font-size:10px;font-weight:700;color:var(--teks2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+.kpi-val{font-size:clamp(18px,4vw,24px);font-weight:800;color:var(--teks);line-height:1.1}
+.kpi-sub{font-size:10px;color:var(--teks2);margin-top:3px}
+.kpi-badge{display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:700;padding:2px 6px;border-radius:20px;margin-top:5px}
+.kpi-badge.up{background:#dcfce7;color:#166534}
+.kpi-badge.dn{background:#fef3c7;color:#92400e}
+
+/* ===== CARDS ===== */
+.card{background:var(--putih);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+.card-header{padding:12px 14px 10px;border-bottom:1px solid var(--abu2);display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.card-title{font-size:13px;font-weight:700;color:var(--teks)}
+.card-sub{font-size:11px;color:var(--teks2);margin-top:1px}
+.card-body{padding:14px}
+.card-body.no-pad{padding:0}
+
+/* ===== GRID LAYOUTS ===== */
+.grid-2{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:700px){.grid-2{grid-template-columns:3fr 2fr}}
+.grid-3{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:700px){.grid-3{grid-template-columns:1fr 1fr 1fr}}
+
+/* ===== CHART ===== */
+.chart-wrap{position:relative;width:100%}
+canvas{width:100%!important}
+
+/* ===== TABLE ===== */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:480px}
+thead th{background:var(--biru-tua);color:var(--putih);padding:9px 8px;text-align:right;font-weight:700;font-size:11px;white-space:nowrap;position:sticky;top:0;z-index:2}
+thead th:first-child,thead th.left{text-align:left}
+tbody tr:nth-child(even){background:var(--abu)}
+tbody tr:hover{background:var(--biru-bg)}
+tbody td{padding:7px 8px;border-bottom:1px solid var(--abu2);white-space:nowrap;text-align:right;font-size:12px}
+tbody td:first-child,tbody td.left{text-align:left;font-weight:600}
+tfoot td{background:var(--biru-tua);color:var(--putih);padding:8px;font-weight:700;text-align:right;font-size:12px}
+tfoot td:first-child,tfoot td.left{text-align:left}
+
+/* ===== RANK LIST ===== */
+.rank-list{display:flex;flex-direction:column;gap:7px}
+.rank-item{display:flex;align-items:center;gap:8px}
+.rank-no{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;border:2px solid transparent}
+.rank-no.r1{background:var(--amber);color:var(--putih)}
+.rank-no.r2{background:var(--teks2);color:var(--putih)}
+.rank-no.r3{background:var(--oranye);color:var(--putih)}
+.rank-no.rn{background:var(--abu2);color:var(--teks2)}
+.rank-bar-wrap{flex:1;min-width:0}
+.rank-label{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;color:var(--teks)}
+.rank-bg{background:var(--abu2);border-radius:3px;height:6px}
+.rank-fill{height:6px;border-radius:3px;background:var(--biru);transition:width .5s ease}
+.rank-fill.orange{background:var(--oranye)}
+.rank-val{font-size:11px;font-weight:700;color:var(--teks);white-space:nowrap;min-width:70px;text-align:right;flex-shrink:0}
+
+/* ===== FILTER BAR ===== */
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.filter-bar label{font-size:11px;font-weight:700;color:var(--teks2)}
+.filter-bar select{padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;color:var(--teks);background:var(--putih);cursor:pointer;max-width:100%}
+.filter-bar select:focus{outline:2px solid var(--biru);border-color:transparent}
+
+/* ===== LEGEND ===== */
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--teks2)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ===== SECTION TITLE ===== */
+.section-title{font-size:15px;font-weight:800;color:var(--biru-tua);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--biru-muda);display:flex;align-items:center;gap:8px}
+.section-title svg{width:18px;height:18px;flex-shrink:0}
+
+/* ===== FOOTER ===== */
+.site-footer{background:var(--biru-tua);color:rgba(255,255,255,.7);font-size:11px;text-align:center;padding:14px 16px;line-height:1.6;margin-top:auto}
+.site-footer strong{color:var(--putih)}
+
+/* ===== UTILS ===== */
+.text-biru{color:var(--biru)}
+.text-teal{color:var(--teal)}
+.text-oranye{color:var(--oranye)}
+.fw-bold{font-weight:700}
+.mb-0{margin-bottom:0}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="header-title">
+        <h1>Rekapitulasi Kepesertaan &amp; Klaim<br>BPJS Ketenagakerjaan 2025</h1>
+        <p>Periode Januari s.d. Desember 2025 &nbsp;|&nbsp; 34 Provinsi Seluruh Indonesia</p>
+      </div>
+      <div class="header-stat">
+        <div class="st-label">TOTAL TENAGA KERJA</div>
+        <div class="st-val">48.649.425</div>
+        <div class="st-sub">Per Desember 2025</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="site-nav" role="navigation" aria-label="Tab navigasi">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showTab('ringkasan',this)" aria-selected="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Ringkasan
+    </button>
+    <button class="nav-btn" onclick="showTab('trend',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Tren Bulanan
+    </button>
+    <button class="nav-btn" onclick="showTab('provinsi',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Per Provinsi
+    </button>
+    <button class="nav-btn" onclick="showTab('klaim',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Klaim
+    </button>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ===== TAB: RINGKASAN ===== -->
+<section id="tab-ringkasan" class="tab-panel active">
+  <div class="kpi-grid" id="kpi-ringkasan"></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Tren Total Tenaga Kerja Aktif</div>
+          <div class="card-sub">Januari – Desember 2025</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chart-tren-tk" height="220"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Komposisi Kepesertaan</div>
+          <div class="card-sub">Per Desember 2025</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chart-donut" height="200"></canvas></div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--biru)"></div>Penerima Upah (PU)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--oranye)"></div>Bukan PU (BPU)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Jasa Konstruksi</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Pertumbuhan Kepesertaan per Segmen</div>
+          <div class="card-sub">Indeks 100 = Januari 2025</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chart-index" height="200"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Top 10 Provinsi – Total TK</div>
+          <div class="card-sub">Desember 2025</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="rank-list" id="rank-top10"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Rekap Bulanan – Semua Indikator</div>
+    </div>
+    <div class="card-body no-pad">
+      <div class="tbl-wrap"><table id="tbl-monthly"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB: TREN ===== -->
+<section id="tab-trend" class="tab-panel">
+  <div class="section-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Tren Kepesertaan per Bulan
+  </div>
+  <div class="kpi-grid" id="kpi-trend"></div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Penerima Upah (PU) Aktif</div>
+      <div class="card-sub">Tenaga Kerja Aktif per bulan</div>
+    </div>
+    <div class="card-body"><div class="chart-wrap"><canvas id="chart-pu" height="200"></canvas></div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">BPU &amp; Jasa Konstruksi</div></div>
+      <div class="card-body"><div class="chart-wrap"><canvas id="chart-bpu" height="200"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">PU Aktif – Jenis Kelamin</div>
+        <div class="card-sub">Laki-laki vs Perempuan</div>
+      </div>
+      <div class="card-body"><div class="chart-wrap"><canvas id="chart-gender" height="200"></canvas></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Perkembangan Jumlah Perusahaan Peserta</div></div>
+    <div class="card-body"><div class="chart-wrap"><canvas id="chart-perus" height="160"></canvas></div></div>
+  </div>
+</section>
+
+<!-- ===== TAB: PROVINSI ===== -->
+<section id="tab-provinsi" class="tab-panel">
+  <div class="section-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    Data Kepesertaan per Provinsi
+  </div>
+  <div class="filter-bar">
+    <label for="sel-bulan">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Bulan:
+    </label>
+    <select id="sel-bulan" onchange="renderProvTable();renderProvBarChart()">
+      <option value="11">Desember 2025</option>
+      <option value="10">November 2025</option>
+      <option value="9">Oktober 2025</option>
+      <option value="8">September 2025</option>
+      <option value="7">Agustus 2025</option>
+      <option value="6">Juli 2025</option>
+      <option value="5">Juni 2025</option>
+      <option value="4">Mei 2025</option>
+      <option value="3">April 2025</option>
+      <option value="2">Maret 2025</option>
+      <option value="1">Februari 2025</option>
+      <option value="0">Januari 2025</option>
+    </select>
+    <label for="sel-sort">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      Urutkan:
+    </label>
+    <select id="sel-sort" onchange="renderProvTable();renderProvBarChart()">
+      <option value="total_tk">Total Tenaga Kerja</option>
+      <option value="pu">PU Aktif</option>
+      <option value="bpu">BPU Aktif</option>
+      <option value="jakon">Jasa Konstruksi</option>
+      <option value="perusahaan">Perusahaan</option>
+      <option value="no">Urut Wilayah</option>
+    </select>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Top 10 Provinsi – Total TK</div>
+          <div class="card-sub" id="prov-bar-sub">Desember 2025</div>
+        </div>
+      </div>
+      <div class="card-body"><div class="chart-wrap"><canvas id="chart-prov-bar" height="240"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Tren Provinsi Terpilih</div></div>
+      <div class="card-body">
+        <select id="sel-prov" onchange="renderProvTrend()" style="width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;margin-bottom:10px"></select>
+        <div class="chart-wrap"><canvas id="chart-prov-trend" height="190"></canvas></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Tabel Data Per Provinsi</div>
+      <div class="card-sub" id="prov-tbl-sub">Desember 2025</div>
+    </div>
+    <div class="card-body no-pad">
+      <div class="tbl-wrap"><table id="tbl-prov"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TAB: KLAIM ===== -->
+<section id="tab-klaim" class="tab-panel">
+  <div class="section-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    Klaim &amp; Nilai Manfaat
+  </div>
+  <div class="kpi-grid" id="kpi-klaim"></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Klaim Kumulatif per Segmen</div></div>
+      <div class="card-body"><div class="chart-wrap"><canvas id="chart-klaim-bar" height="220"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Komposisi Klaim</div>
+        <div class="card-sub">Kumulatif Desember 2025</div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chart-klaim-donut" height="190"></canvas></div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--biru)"></div>PU</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--oranye)"></div>BPU</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Jakon</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Nilai Manfaat Kumulatif (Miliar Rupiah)</div></div>
+    <div class="card-body"><div class="chart-wrap"><canvas id="chart-nilai" height="180"></canvas></div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Top 10 Provinsi – Klaim Terbanyak</div>
+        <div class="card-sub">Desember 2025</div>
+      </div>
+      <div class="card-body">
+        <div class="rank-list" id="rank-klaim"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Tabel Rekap Klaim Bulanan</div>
+      </div>
+      <div class="card-body no-pad">
+        <div class="tbl-wrap"><table id="tbl-klaim"></table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <strong>Sumber:</strong> BPJS Ketenagakerjaan, diolah oleh Mediator HI Ahli Muda – Tommy, S.Kom., M.M. – Direktorat Jaminan Sosial Tenaga Kerja dan Fasilitasi Kesejahteraan Pekerja
+</footer>
+
+<script>
+// =============================================
+// DATA
+// =============================================
+const D={"monthly":[{"bulan":"Januari","perusahaan":845824,"pu_aktif":26893712,"pu_laki":17424478,"pu_perempuan":9469234,"pu_nonaktif":19107406,"bpu_aktif":9909438,"bpu_nonaktif":1233789,"jakon":5865289,"total_tk":42668439,"klaim_pu":452733,"klaim_bpu":8996,"klaim_jakon":350,"total_klaim":462079,"nilai_pu":4577553224812,"nilai_bpu":131742934926,"nilai_jakon":6489752110,"total_nilai":4715785911848},{"bulan":"Februari","perusahaan":839937,"pu_aktif":26265683,"pu_laki":17045920,"pu_perempuan":9219763,"pu_nonaktif":19150733,"bpu_aktif":9586822,"bpu_nonaktif":1260208,"jakon":41386227,"total_tk":41386227,"klaim_pu":816431,"klaim_bpu":15850,"klaim_jakon":673,"total_klaim":832954,"nilai_pu":9872851686643,"nilai_bpu":278412529432,"nilai_jakon":12809537960,"total_nilai":10164073754035},{"bulan":"Maret","perusahaan":839732,"pu_aktif":26094749,"pu_laki":16948228,"pu_perempuan":9146521,"pu_nonaktif":19144638,"bpu_aktif":9219509,"bpu_nonaktif":1289130,"jakon":40196096,"total_tk":40196096,"klaim_pu":1200164,"klaim_bpu":24245,"klaim_jakon":1014,"total_klaim":1225423,"nilai_pu":15315025271742,"nilai_bpu":438695726755,"nilai_jakon":21097355520,"total_nilai":15774818354017},{"bulan":"April","perusahaan":840429,"pu_aktif":26069435,"pu_laki":16932951,"pu_perempuan":9136484,"pu_nonaktif":18503936,"bpu_aktif":8989919,"bpu_nonaktif":1310607,"jakon":39701452,"total_tk":39701452,"klaim_pu":1484700,"klaim_bpu":29901,"klaim_jakon":1197,"total_klaim":1515798,"nilai_pu":19335832211816,"nilai_bpu":542562939805,"nilai_jakon":24526517590,"total_nilai":19902921669211},{"bulan":"Mei","perusahaan":843118,"pu_aktif":26202131,"pu_laki":17010960,"pu_perempuan":9191171,"pu_nonaktif":19285422,"bpu_aktif":8287660,"bpu_nonaktif":1336126,"jakon":39051972,"total_tk":39051972,"klaim_pu":1878325,"klaim_bpu":37613,"klaim_jakon":1422,"total_klaim":1917360,"nilai_pu":24666431330876,"nilai_bpu":691887033269,"nilai_jakon":30984698330,"total_nilai":25389303062475},{"bulan":"Juni","perusahaan":848349,"pu_aktif":26305609,"pu_laki":17066201,"pu_perempuan":9239408,"pu_nonaktif":19318915,"bpu_aktif":8621390,"bpu_nonaktif":1334245,"jakon":39354488,"total_tk":39354488,"klaim_pu":2180353,"klaim_bpu":46689,"klaim_jakon":1644,"total_klaim":2228686,"nilai_pu":28511613430818,"nilai_bpu":837596954122,"nilai_jakon":34582218460,"total_nilai":29383792603400},{"bulan":"Juli","perusahaan":855023,"pu_aktif":26442185,"pu_laki":17153693,"pu_perempuan":9288492,"pu_nonaktif":19332678,"bpu_aktif":9395802,"bpu_nonaktif":1340692,"jakon":4112913,"total_tk":39950900,"klaim_pu":2743984,"klaim_bpu":58111,"klaim_jakon":1952,"total_klaim":2804047,"nilai_pu":36464702434768,"nilai_bpu":1027166431372,"nilai_jakon":41118673140,"total_nilai":37532987539279},{"bulan":"Agustus","perusahaan":859218,"pu_aktif":26642566,"pu_laki":17275441,"pu_perempuan":9367125,"pu_nonaktif":19308455,"bpu_aktif":9962568,"bpu_nonaktif":1352601,"jakon":4393048,"total_tk":40998182,"klaim_pu":3172021,"klaim_bpu":67614,"klaim_jakon":2281,"total_klaim":3241916,"nilai_pu":42380098018974,"nilai_bpu":1189886703006,"nilai_jakon":48643878520,"total_nilai":43618628600499},{"bulan":"September","perusahaan":862199,"pu_aktif":26640225,"pu_laki":17305028,"pu_perempuan":9335197,"pu_nonaktif":19299452,"bpu_aktif":10631656,"bpu_nonaktif":1363323,"jakon":4758475,"total_tk":42030356,"klaim_pu":3620561,"klaim_bpu":77666,"klaim_jakon":2557,"total_klaim":3700784,"nilai_pu":48571355018920,"nilai_bpu":1360811180275,"nilai_jakon":53438169140,"total_nilai":49985604368335},{"bulan":"Oktober","perusahaan":867675,"pu_aktif":26783444,"pu_laki":17367198,"pu_perempuan":9416246,"pu_nonaktif":19317975,"bpu_aktif":11508482,"bpu_nonaktif":1368432,"jakon":5252357,"total_tk":43544283,"klaim_pu":4075615,"klaim_bpu":88781,"klaim_jakon":2956,"total_klaim":4167352,"nilai_pu":54868995281557,"nilai_bpu":1556067261112,"nilai_jakon":60806372830,"total_nilai":56485868915499},{"bulan":"November","perusahaan":872837,"pu_aktif":27065530,"pu_laki":17566079,"pu_perempuan":9499451,"pu_nonaktif":19288773,"bpu_aktif":12970678,"bpu_nonaktif":1384338,"jakon":5830780,"total_tk":45866988,"klaim_pu":4489044,"klaim_bpu":97857,"klaim_jakon":3374,"total_klaim":4590275,"nilai_pu":60520988116322,"nilai_bpu":1717352754802,"nilai_jakon":67073567750,"total_nilai":62305414438874},{"bulan":"Desember","perusahaan":875641,"pu_aktif":27406731,"pu_laki":17754660,"pu_perempuan":9652071,"pu_nonaktif":19271695,"bpu_aktif":14195182,"bpu_nonaktif":1391005,"jakon":7047512,"total_tk":48649425,"klaim_pu":4913646,"klaim_bpu":107440,"klaim_jakon":3704,"total_klaim":5024790,"nilai_pu":66162521201027,"nilai_bpu":1897201870572,"nilai_jakon":76289346780,"total_nilai":68136012418379}],"provinces_dec":[{"no":1,"prov":"Aceh","perusahaan":18829,"pu":283525,"bpu":91925,"jakon":115425,"total_tk":490875,"klaim":59279,"nilai":883854512130},{"no":2,"prov":"Sumatera Utara","perusahaan":45750,"pu":998178,"bpu":708761,"jakon":410115,"total_tk":2117054,"klaim":237011,"nilai":3093643709164},{"no":3,"prov":"Sumatera Barat","perusahaan":15069,"pu":256220,"bpu":239048,"jakon":89497,"total_tk":584765,"klaim":91520,"nilai":1094371154639},{"no":4,"prov":"Riau","perusahaan":20844,"pu":649504,"bpu":508575,"jakon":102139,"total_tk":1260218,"klaim":175093,"nilai":1985382483848},{"no":5,"prov":"Kepulauan Riau","perusahaan":15411,"pu":444572,"bpu":239896,"jakon":55895,"total_tk":740363,"klaim":118300,"nilai":1315156911372},{"no":6,"prov":"Jambi","perusahaan":12672,"pu":243352,"bpu":268932,"jakon":90694,"total_tk":602978,"klaim":63198,"nilai":803050620433},{"no":7,"prov":"Sumatera Selatan","perusahaan":15261,"pu":553205,"bpu":291888,"jakon":233238,"total_tk":1078331,"klaim":96501,"nilai":1341186850796},{"no":8,"prov":"Kep. Bangka Belitung","perusahaan":4550,"pu":114348,"bpu":55671,"jakon":34461,"total_tk":204480,"klaim":21397,"nilai":245692655226},{"no":9,"prov":"Bengkulu","perusahaan":3829,"pu":141632,"bpu":95578,"jakon":25509,"total_tk":262719,"klaim":24695,"nilai":295568908709},{"no":10,"prov":"Lampung","perusahaan":12335,"pu":375973,"bpu":124727,"jakon":110174,"total_tk":610874,"klaim":72818,"nilai":1018157034327},{"no":11,"prov":"DKI Jakarta","perusahaan":116824,"pu":5862518,"bpu":1267183,"jakon":1191556,"total_tk":8321257,"klaim":709275,"nilai":12567341165546},{"no":12,"prov":"Jawa Barat","perusahaan":98029,"pu":3772100,"bpu":1965615,"jakon":673534,"total_tk":6411249,"klaim":751339,"nilai":9984752541215},{"no":13,"prov":"Banten","perusahaan":41759,"pu":1686331,"bpu":1028656,"jakon":371049,"total_tk":3086036,"klaim":342236,"nilai":4960463587863},{"no":14,"prov":"Jawa Tengah","perusahaan":107420,"pu":3102726,"bpu":1075938,"jakon":631701,"total_tk":4810365,"klaim":573815,"nilai":5744856107799},{"no":15,"prov":"DI Yogyakarta","perusahaan":18787,"pu":415389,"bpu":129888,"jakon":84686,"total_tk":629963,"klaim":97917,"nilai":1211512872736},{"no":16,"prov":"Jawa Timur","perusahaan":132364,"pu":3373509,"bpu":1530232,"jakon":1071693,"total_tk":5975434,"klaim":578029,"nilai":8367364549239},{"no":17,"prov":"Bali","perusahaan":33778,"pu":623750,"bpu":469156,"jakon":98999,"total_tk":1191905,"klaim":105684,"nilai":1656980361401},{"no":18,"prov":"NTB","perusahaan":10281,"pu":295823,"bpu":324646,"jakon":72442,"total_tk":692911,"klaim":40413,"nilai":588312991418},{"no":19,"prov":"NTT","perusahaan":9111,"pu":181949,"bpu":288712,"jakon":65112,"total_tk":535773,"klaim":34507,"nilai":510967378465},{"no":20,"prov":"Kalimantan Barat","perusahaan":13807,"pu":440002,"bpu":206956,"jakon":155170,"total_tk":802128,"klaim":79754,"nilai":889669477799},{"no":21,"prov":"Kalimantan Tengah","perusahaan":10557,"pu":371542,"bpu":232421,"jakon":166289,"total_tk":770252,"klaim":97326,"nilai":1048911938000},{"no":22,"prov":"Kalimantan Selatan","perusahaan":15725,"pu":422067,"bpu":415111,"jakon":77484,"total_tk":914662,"klaim":83632,"nilai":1008707165605},{"no":23,"prov":"Kalimantan Timur","perusahaan":19465,"pu":691611,"bpu":506185,"jakon":253249,"total_tk":1451045,"klaim":155656,"nilai":1776014895850},{"no":24,"prov":"Kalimantan Utara","perusahaan":3524,"pu":104428,"bpu":73641,"jakon":36309,"total_tk":214378,"klaim":26496,"nilai":285537462006},{"no":25,"prov":"Sulawesi Utara","perusahaan":4838,"pu":273684,"bpu":206606,"jakon":40144,"total_tk":520434,"klaim":37285,"nilai":557242253701},{"no":26,"prov":"Gorontalo","perusahaan":3725,"pu":64281,"bpu":184150,"jakon":67488,"total_tk":315919,"klaim":11931,"nilai":198550780789},{"no":27,"prov":"Sulawesi Tengah","perusahaan":9075,"pu":322855,"bpu":291508,"jakon":87717,"total_tk":702080,"klaim":62947,"nilai":671913580530},{"no":28,"prov":"Sulawesi Selatan","perusahaan":28586,"pu":591356,"bpu":639682,"jakon":348256,"total_tk":1579294,"klaim":120855,"nilai":1841583057437},{"no":29,"prov":"Sulawesi Barat","perusahaan":1173,"pu":24398,"bpu":34994,"jakon":14979,"total_tk":74371,"klaim":15566,"nilai":272405091149},{"no":30,"prov":"Sulawesi Tenggara","perusahaan":6992,"pu":183826,"bpu":94561,"jakon":28195,"total_tk":306582,"klaim":30566,"nilai":347387965706},{"no":31,"prov":"Maluku","perusahaan":6047,"pu":74820,"bpu":90706,"jakon":76252,"total_tk":241778,"klaim":20172,"nilai":293476860833},{"no":32,"prov":"Maluku Utara","perusahaan":3854,"pu":196329,"bpu":98021,"jakon":15658,"total_tk":310008,"klaim":28791,"nilai":238985831155},{"no":33,"prov":"Papua","perusahaan":8877,"pu":156699,"bpu":143808,"jakon":132243,"total_tk":432750,"klaim":33665,"nilai":622705356527},{"no":34,"prov":"Papua Barat","perusahaan":6493,"pu":114229,"bpu":271805,"jakon":20160,"total_tk":406194,"klaim":27121,"nilai":414304304967}],"prov_monthly":{"Aceh":[477621,435552,408958,399741,389918,389911,376028,391247,403231,425166,450770,490875],"Sumatera Utara":[2066915,1982041,1913244,1843716,1810996,1828794,1804837,1798720,1874467,1965185,2011640,2117054],"Sumatera Barat":[557000,536647,509661,511379,485202,486021,491011,499606,508418,522429,547009,584765],"Riau":[1124421,1061024,998168,983431,893204,910502,960125,1009772,1055613,1080346,1092418,1260218],"Kepulauan Riau":[629069,616911,608199,598814,596551,613291,618295,640263,650257,660601,669524,740363],"Jambi":[527041,518410,479728,445913,473052,463787,462748,473410,515704,534620,554391,602978],"Sumatera Selatan":[922069,889434,859684,853056,817598,862028,830238,920825,938037,963930,994849,1078331],"Kep. Bangka Belitung":[183785,178864,167000,163729,160130,160859,163347,172581,187438,192213,200403,204480],"Bengkulu":[197940,190848,168987,167243,163733,168566,166951,176601,180014,208379,244723,262719],"Lampung":[568468,507419,488317,479190,486281,487584,486452,524489,538952,555426,588135,610874],"DKI Jakarta":[8102790,8015475,7813606,7767862,7672198,7714347,7759760,7797737,7862892,7943914,8083443,8321257],"Jawa Barat":[5092901,4963284,4749904,4718022,4784017,4845388,4917346,5033108,5183211,5343339,6172016,6411249],"Banten":[2831669,2753491,2683372,2610106,2562302,2538233,2570416,2596006,2682386,2717358,2814117,3086036],"Jawa Tengah":[4107023,3996584,4010387,3973808,3992070,4047403,4145390,4233413,4320666,4468984,4637939,4810365],"DI Yogyakarta":[564836,542874,536992,537226,531560,545542,559278,573776,586560,610766,619698,629963],"Jawa Timur":[5015108,4953256,4847443,4813323,4767325,4786525,4922913,5150627,5276896,5510944,5733450,5975434],"Bali":[1103521,1103893,1061885,1066571,1078777,1082275,1096960,1109943,1110344,1135112,1153498,1191905],"NTB":[556380,530976,505443,496608,468536,486005,501182,533344,553724,582718,628493,692911],"NTT":[388448,363048,326280,323249,319466,325744,431593,436652,446283,470326,474479,535773],"Kalimantan Barat":[731294,671836,641733,634881,596042,586930,587174,626829,662790,666937,722468,802128],"Kalimantan Tengah":[627815,577486,563894,555394,542913,538918,551229,560988,578236,647400,670551,770252],"Kalimantan Selatan":[698809,679708,679613,698538,691451,727452,732103,747213,765711,809397,849024,914662],"Kalimantan Timur":[1379340,1312217,1291076,1278988,1174898,1183362,1205810,1202310,1208309,1302496,1335388,1451045],"Kalimantan Utara":[218387,198555,191903,188724,175613,135024,129771,131596,138549,150803,171129,214378],"Sulawesi Utara":[498494,460235,457394,434249,434469,443226,448388,455747,456950,465995,490053,520434],"Gorontalo":[243074,245417,242826,242958,236675,237412,240845,246758,251497,257077,284444,315919],"Sulawesi Tengah":[550528,516566,503580,502486,501607,476372,531490,538891,545149,587927,664199,702080],"Sulawesi Selatan":[1129084,1093897,1064245,1047146,1052185,1076046,1021998,1086080,1139633,1284547,1377472,1579294],"Sulawesi Barat":[67925,65338,61476,59048,49340,56197,61766,61645,63759,65445,69727,74371],"Sulawesi Tenggara":[316035,299266,288072,268780,247032,237712,236725,264603,265891,271759,280499,306582],"Maluku":[158718,156026,154876,148127,140683,135330,130461,144772,160077,178066,228363,241778],"Maluku Utara":[251626,244928,240989,236962,235424,235119,243539,250775,260735,261285,287049,310008],"Papua":[406031,369679,329661,320824,279594,264695,244857,257197,304887,335394,393635,432750],"Papua Barat":[374274,355042,347500,331360,241130,277888,319874,350658,353090,367999,371992,406194]}};
+
+const MO=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+const MO_FULL=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const CLR={biru:'#1a56a8',oranye:'#c45c00',teal:'#0b7a6e',amber:'#f59e0b',biru2:'#3b82f6',teal2:'#14b8a6'};
+
+// =============================================
+// HELPERS
+// =============================================
+const fmt=n=>Math.round(n).toLocaleString('id-ID');
+const fmtM=n=>{n=+n;if(n>=1e12)return(n/1e12).toFixed(2)+' T';if(n>=1e9)return(n/1e9).toFixed(1)+' M';return fmt(n);};
+const pct=(a,b)=>{const d=(a-b)/b*100;return(d>=0?'+':'')+d.toFixed(1)+'%';};
+const pctNum=(a,b)=>(a-b)/b*100;
+
+const charts={};
+function mkChart(id,cfg){if(charts[id])charts[id].destroy();const c=document.getElementById(id);if(!c)return;charts[id]=new Chart(c,cfg);}
+
+const scaleY=(cb)=>({y:{ticks:{font:{size:10},callback:cb},grid:{color:'#f1f5f9'}}});
+const scaleX=()=>({x:{ticks:{font:{size:10}},grid:{display:false}}});
+
+// =============================================
+// TAB NAVIGATION
+// =============================================
+function showTab(id,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-selected');});
+  document.getElementById('tab-'+id).classList.add('active');
+  if(btn){btn.classList.add('active');btn.setAttribute('aria-selected','true');}
+}
+
+// =============================================
+// RINGKASAN TAB
+// =============================================
+function initRingkasan(){
+  const dec=D.monthly[11], jan=D.monthly[0];
+
+  // KPI
+  const kpis=[
+    {label:'Total Tenaga Kerja',val:fmt(dec.total_tk),sub:'Aktif Des 2025',badge:pct(dec.total_tk,jan.total_tk),cls:'',icon:'workers'},
+    {label:'Penerima Upah (PU)',val:fmt(dec.pu_aktif),sub:'Aktif WNI+WNA',badge:pct(dec.pu_aktif,jan.pu_aktif),cls:'',icon:'pu'},
+    {label:'Bukan Penerima Upah',val:fmt(dec.bpu_aktif),sub:'BPU Aktif',badge:pct(dec.bpu_aktif,jan.bpu_aktif),cls:'orange',icon:'bpu'},
+    {label:'Perusahaan Peserta',val:fmt(dec.perusahaan),sub:'Des 2025',badge:pct(dec.perusahaan,jan.perusahaan),cls:'teal',icon:'building'},
+    {label:'Jasa Konstruksi',val:fmt(dec.jakon),sub:'Aktif Jakon',badge:pct(dec.jakon,jan.jakon),cls:'amber',icon:'construct'},
+    {label:'Total Klaim Kum.',val:fmt(dec.total_klaim),sub:'s.d Desember 2025',badge:null,cls:'orange',icon:'doc'},
+    {label:'Nilai Manfaat Kum.',val:fmtM(dec.total_nilai),sub:'Rupiah, s.d Des 2025',badge:null,cls:'teal',icon:'money'},
+    {label:'PU Aktif Laki-laki',val:fmt(dec.pu_laki),sub:((dec.pu_laki/dec.pu_aktif)*100).toFixed(1)+'% dari PU',badge:null,cls:'',icon:'male'},
+  ];
+  const ICONS={
+    workers:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`,
+    pu:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>`,
+    bpu:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`,
+    building:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`,
+    construct:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"/></svg>`,
+    doc:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`,
+    money:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+    male:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3zm14-2a2 2 0 100-4 2 2 0 000 4zm0 2a4 4 0 00-3.446 1.979c.504.135 1.015.214 1.543.214.527 0 1.038-.079 1.543-.214A4 4 0 0017 18z"/></svg>`,
+  };
+  document.getElementById('kpi-ringkasan').innerHTML=kpis.map(k=>`
+    <div class="kpi-card ${k.cls}">
+      <div class="kpi-icon">${ICONS[k.icon]||''}</div>
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-val">${k.val}</div>
+      <div class="kpi-sub">${k.sub}</div>
+      ${k.badge!=null?`<span class="kpi-badge ${pctNum(dec[k.label],jan[k.label])>=0?'up':'dn'}">${k.badge} vs Jan</span>`:''}
+    </div>`).join('');
+
+  // Chart tren TK
+  mkChart('chart-tren-tk',{type:'line',data:{labels:MO,datasets:[
+    {label:'Total TK Aktif',data:D.monthly.map(m=>m.total_tk),borderColor:CLR.biru,backgroundColor:'rgba(26,86,168,.1)',fill:true,tension:.35,pointRadius:4,borderWidth:2.5},
+    {label:'PU Aktif',data:D.monthly.map(m=>m.pu_aktif),borderColor:CLR.teal,tension:.3,pointRadius:3,borderWidth:1.5,borderDash:[4,3]},
+    {label:'BPU Aktif',data:D.monthly.map(m=>m.bpu_aktif),borderColor:CLR.oranye,tension:.3,pointRadius:3,borderWidth:1.5,borderDash:[4,3]},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},padding:10}}},scales:{...scaleX(),...scaleY(v=>fmtM(v))}}});
+
+  // Donut komposisi
+  mkChart('chart-donut',{type:'doughnut',data:{labels:['PU','BPU','Jakon'],datasets:[{data:[dec.pu_aktif,dec.bpu_aktif,dec.jakon],backgroundColor:[CLR.biru,CLR.oranye,CLR.teal],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${fmt(c.parsed)} (${(c.parsed/dec.total_tk*100).toFixed(1)}%)`}}}}});
+
+  // Index chart
+  const j=D.monthly[0];
+  mkChart('chart-index',{type:'line',data:{labels:MO,datasets:[
+    {label:'PU',data:D.monthly.map(m=>(m.pu_aktif/j.pu_aktif*100).toFixed(1)),borderColor:CLR.biru,tension:.3,pointRadius:3,borderWidth:2},
+    {label:'BPU',data:D.monthly.map(m=>(m.bpu_aktif/j.bpu_aktif*100).toFixed(1)),borderColor:CLR.oranye,tension:.3,pointRadius:3,borderWidth:2},
+    {label:'Perusahaan',data:D.monthly.map(m=>(m.perusahaan/j.perusahaan*100).toFixed(1)),borderColor:CLR.teal,tension:.3,pointRadius:3,borderWidth:2},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{...scaleX(),...scaleY(v=>v+'')}}});
+
+  // Top 10 rank
+  const sorted=[...D.provinces_dec].sort((a,b)=>b.total_tk-a.total_tk).slice(0,10);
+  const maxTK=sorted[0].total_tk;
+  document.getElementById('rank-top10').innerHTML=sorted.map((p,i)=>{
+    const cls=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+    return`<div class="rank-item">
+      <div class="rank-no ${cls}">${i+1}</div>
+      <div class="rank-bar-wrap">
+        <div class="rank-label">${p.prov}</div>
+        <div class="rank-bg"><div class="rank-fill" style="width:${(p.total_tk/maxTK*100).toFixed(1)}%"></div></div>
+      </div>
+      <div class="rank-val">${fmt(p.total_tk)}</div>
+    </div>`;
+  }).join('');
+
+  // Table monthly
+  const el=document.getElementById('tbl-monthly');
+  el.innerHTML=`<thead><tr>
+    <th class="left">Bulan</th><th>Perusahaan</th><th>PU Aktif</th><th>BPU Aktif</th>
+    <th>Jakon</th><th>Total TK</th><th>Klaim (kum.)</th><th>Nilai Manfaat (kum.)</th>
+  </tr></thead><tbody>${D.monthly.map(m=>`<tr>
+    <td class="left fw-bold">${m.bulan}</td>
+    <td>${fmt(m.perusahaan)}</td><td>${fmt(m.pu_aktif)}</td><td>${fmt(m.bpu_aktif)}</td>
+    <td>${fmt(m.jakon)}</td><td class="fw-bold text-biru">${fmt(m.total_tk)}</td>
+    <td>${fmt(m.total_klaim)}</td><td>${fmtM(m.total_nilai)}</td>
+  </tr>`).join('')}</tbody><tfoot><tr>
+    <td class="left">DESEMBER 2025</td>
+    <td>${fmt(dec.perusahaan)}</td><td>${fmt(dec.pu_aktif)}</td><td>${fmt(dec.bpu_aktif)}</td>
+    <td>${fmt(dec.jakon)}</td><td>${fmt(dec.total_tk)}</td>
+    <td>${fmt(dec.total_klaim)}</td><td>${fmtM(dec.total_nilai)}</td>
+  </tr></tfoot>`;
+}
+
+// =============================================
+// TREN TAB
+// =============================================
+function initTren(){
+  const dec=D.monthly[11],jan=D.monthly[0];
+  // KPI tren
+  document.getElementById('kpi-trend').innerHTML=[
+    {label:'Pertumbuhan Total TK',val:pct(dec.total_tk,jan.total_tk),sub:'Jan → Des 2025',cls:''},
+    {label:'Pertumbuhan PU',val:pct(dec.pu_aktif,jan.pu_aktif),sub:'Penerima Upah',cls:''},
+    {label:'Pertumbuhan BPU',val:pct(dec.bpu_aktif,jan.bpu_aktif),sub:'Bukan Penerima Upah',cls:'orange'},
+    {label:'Pertumbuhan Perusahaan',val:pct(dec.perusahaan,jan.perusahaan),sub:'Peserta aktif',cls:'teal'},
+  ].map(k=>`<div class="kpi-card ${k.cls}">
+    <div class="kpi-label">${k.label}</div>
+    <div class="kpi-val" style="color:${k.val.startsWith('+')?'var(--teal)':'var(--oranye)'};font-size:20px">${k.val}</div>
+    <div class="kpi-sub">${k.sub}</div>
+  </div>`).join('');
+
+  mkChart('chart-pu',{type:'bar',data:{labels:MO,datasets:[
+    {label:'PU Aktif',data:D.monthly.map(m=>m.pu_aktif),backgroundColor:CLR.biru,borderRadius:3},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{...scaleX(),...scaleY(v=>fmtM(v))}}});
+
+  mkChart('chart-bpu',{type:'line',data:{labels:MO,datasets:[
+    {label:'BPU Aktif',data:D.monthly.map(m=>m.bpu_aktif),borderColor:CLR.oranye,backgroundColor:'rgba(196,92,0,.1)',fill:true,tension:.3,pointRadius:4,borderWidth:2},
+    {label:'Jasa Konstruksi',data:D.monthly.map(m=>m.jakon),borderColor:CLR.teal,tension:.3,pointRadius:4,borderWidth:2},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{...scaleX(),...scaleY(v=>fmtM(v))}}});
+
+  mkChart('chart-gender',{type:'bar',data:{labels:MO,datasets:[
+    {label:'Laki-laki',data:D.monthly.map(m=>m.pu_laki),backgroundColor:CLR.biru,stack:'s'},
+    {label:'Perempuan',data:D.monthly.map(m=>m.pu_perempuan),backgroundColor:CLR.oranye,stack:'s'},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{x:{stacked:true,ticks:{font:{size:10}},grid:{display:false}},y:{stacked:true,ticks:{font:{size:10},callback:v=>fmtM(v)}}}}});
+
+  mkChart('chart-perus',{type:'line',data:{labels:MO,datasets:[
+    {label:'Perusahaan',data:D.monthly.map(m=>m.perusahaan),borderColor:CLR.teal,backgroundColor:'rgba(11,122,110,.08)',fill:true,tension:.3,pointRadius:4,borderWidth:2},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{...scaleX(),...scaleY(v=>(v/1000).toFixed(0)+'K')}}});
+}
+
+// =============================================
+// PROVINSI TAB
+// =============================================
+function initProvinsi(){
+  // Populate dropdown provinsi
+  const sel=document.getElementById('sel-prov');
+  sel.innerHTML=Object.keys(D.prov_monthly).map(p=>`<option value="${p}">${p}</option>`).join('');
+  renderProvTable();
+  renderProvBarChart();
+  renderProvTrend();
+}
+
+function getProvData(bi){
+  return D.provinces_dec.map(p=>{
+    const key=Object.keys(D.prov_monthly).find(k=>k===p.prov||k.toLowerCase()===p.prov.toLowerCase())||p.prov;
+    const tk=(D.prov_monthly[key]||[])[bi]??p.total_tk;
+    return{...p,total_tk_m:tk};
+  });
+}
+
+function renderProvBarChart(){
+  const bi=+document.getElementById('sel-bulan').value;
+  const data=getProvData(bi);
+  const top10=[...data].sort((a,b)=>b.total_tk_m-a.total_tk_m).slice(0,10);
+  document.getElementById('prov-bar-sub').textContent=MO_FULL[bi]+' 2025';
+  mkChart('chart-prov-bar',{type:'bar',data:{labels:top10.map(p=>p.prov),datasets:[{label:'Total TK',data:top10.map(p=>p.total_tk_m),backgroundColor:top10.map((_,i)=>i===0?CLR.biru:i<3?CLR.teal:'rgba(26,86,168,.55)'),borderRadius:3}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},callback:v=>fmtM(v)},grid:{color:'#f1f5f9'}},y:{ticks:{font:{size:10}},grid:{display:false}}}}});
+}
+
+function renderProvTable(){
+  const bi=+document.getElementById('sel-bulan').value;
+  const sk=document.getElementById('sel-sort').value;
+  const sub=MO_FULL[bi]+' 2025';
+  document.getElementById('prov-tbl-sub').textContent=sub;
+  document.getElementById('prov-bar-sub').textContent=sub;
+  let data=getProvData(bi);
+  if(sk==='no') data.sort((a,b)=>a.no-b.no);
+  else if(sk==='total_tk') data.sort((a,b)=>b.total_tk_m-a.total_tk_m);
+  else data.sort((a,b)=>b[sk]-a[sk]);
+  const totals=data.reduce((acc,p)=>({perusahaan:acc.perusahaan+p.perusahaan,pu:acc.pu+p.pu,bpu:acc.bpu+p.bpu,jakon:acc.jakon+p.jakon,tk:acc.tk+p.total_tk_m}),{perusahaan:0,pu:0,bpu:0,jakon:0,tk:0});
+  document.getElementById('tbl-prov').innerHTML=`<thead><tr>
+    <th class="left">No</th><th class="left">Provinsi</th>
+    <th>Perusahaan</th><th>PU Aktif</th><th>BPU Aktif</th><th>Jakon</th><th>Total TK</th>
+  </tr></thead><tbody>${data.map((p,i)=>`<tr>
+    <td class="left">${i+1}</td><td class="left">${p.prov}</td>
+    <td>${fmt(p.perusahaan)}</td><td>${fmt(p.pu)}</td><td>${fmt(p.bpu)}</td>
+    <td>${fmt(p.jakon)}</td><td class="fw-bold text-biru">${fmt(p.total_tk_m)}</td>
+  </tr>`).join('')}</tbody><tfoot><tr>
+    <td class="left" colspan="2">JUMLAH</td>
+    <td>${fmt(totals.perusahaan)}</td><td>${fmt(totals.pu)}</td><td>${fmt(totals.bpu)}</td>
+    <td>${fmt(totals.jakon)}</td><td>${fmt(totals.tk)}</td>
+  </tr></tfoot>`;
+}
+
+function renderProvTrend(){
+  const prov=document.getElementById('sel-prov').value;
+  const vals=D.prov_monthly[prov]||[];
+  mkChart('chart-prov-trend',{type:'line',data:{labels:MO,datasets:[{label:prov,data:vals,borderColor:CLR.biru,backgroundColor:'rgba(26,86,168,.1)',fill:true,tension:.35,pointRadius:4,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{...scaleX(),...scaleY(v=>fmt(v))}}});
+}
+
+// =============================================
+// KLAIM TAB
+// =============================================
+function initKlaim(){
+  const dec=D.monthly[11];
+  document.getElementById('kpi-klaim').innerHTML=[
+    {label:'Total Klaim Kum.',val:fmt(dec.total_klaim),sub:'PU + BPU + Jakon',cls:''},
+    {label:'Klaim PU Kum.',val:fmt(dec.klaim_pu),sub:'Penerima Upah',cls:''},
+    {label:'Nilai Manfaat Kum.',val:fmtM(dec.total_nilai),sub:'Rupiah, s.d Des 2025',cls:'teal'},
+    {label:'Klaim BPU + Jakon',val:fmt(dec.klaim_bpu+dec.klaim_jakon),sub:`BPU: ${fmt(dec.klaim_bpu)} | Jakon: ${fmt(dec.klaim_jakon)}`,cls:'orange'},
+  ].map(k=>`<div class="kpi-card ${k.cls}">
+    <div class="kpi-label">${k.label}</div>
+    <div class="kpi-val">${k.val}</div>
+    <div class="kpi-sub">${k.sub}</div>
+  </div>`).join('');
+
+  mkChart('chart-klaim-bar',{type:'bar',data:{labels:MO,datasets:[
+    {label:'Klaim PU',data:D.monthly.map(m=>m.klaim_pu),backgroundColor:CLR.biru,stack:'k',borderRadius:2},
+    {label:'Klaim BPU',data:D.monthly.map(m=>m.klaim_bpu),backgroundColor:CLR.oranye,stack:'k',borderRadius:2},
+    {label:'Klaim Jakon',data:D.monthly.map(m=>m.klaim_jakon),backgroundColor:CLR.teal,stack:'k',borderRadius:2},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{x:{stacked:true,ticks:{font:{size:10}},grid:{display:false}},y:{stacked:true,ticks:{font:{size:10}}}}}});
+
+  mkChart('chart-klaim-donut',{type:'doughnut',data:{labels:['PU','BPU','Jakon'],datasets:[{data:[dec.klaim_pu,dec.klaim_bpu,dec.klaim_jakon],backgroundColor:[CLR.biru,CLR.oranye,CLR.teal],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:false}}}});
+
+  mkChart('chart-nilai',{type:'line',data:{labels:MO,datasets:[
+    {label:'Nilai PU',data:D.monthly.map(m=>m.nilai_pu/1e9),borderColor:CLR.biru,backgroundColor:'rgba(26,86,168,.08)',fill:true,tension:.3,pointRadius:3,borderWidth:2},
+    {label:'Nilai BPU',data:D.monthly.map(m=>m.nilai_bpu/1e9),borderColor:CLR.oranye,tension:.3,pointRadius:3,borderWidth:2},
+    {label:'Nilai Jakon',data:D.monthly.map(m=>m.nilai_jakon/1e9),borderColor:CLR.teal,tension:.3,pointRadius:3,borderWidth:2},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>c.dataset.label+': Rp '+c.parsed.y.toFixed(0)+' M'}}},scales:{...scaleX(),...scaleY(v=>'Rp '+v.toFixed(0)+'M')}}});
+
+  // Top 10 klaim rank
+  const top10k=[...D.provinces_dec].sort((a,b)=>b.klaim-a.klaim).slice(0,10);
+  const maxK=top10k[0].klaim;
+  document.getElementById('rank-klaim').innerHTML=top10k.map((p,i)=>{
+    const cls=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+    return`<div class="rank-item">
+      <div class="rank-no ${cls}">${i+1}</div>
+      <div class="rank-bar-wrap">
+        <div class="rank-label">${p.prov}</div>
+        <div class="rank-bg"><div class="rank-fill orange" style="width:${(p.klaim/maxK*100).toFixed(1)}%"></div></div>
+      </div>
+      <div class="rank-val">${fmt(p.klaim)}</div>
+    </div>`;
+  }).join('');
+
+  // Tabel klaim bulanan
+  document.getElementById('tbl-klaim').innerHTML=`<thead><tr>
+    <th class="left">Bulan</th><th>Klaim PU</th><th>Klaim BPU</th><th>Klaim Jakon</th><th>Total</th>
+  </tr></thead><tbody>${D.monthly.map(m=>`<tr>
+    <td class="left fw-bold">${m.bulan}</td>
+    <td>${fmt(m.klaim_pu)}</td><td>${fmt(m.klaim_bpu)}</td><td>${fmt(m.klaim_jakon)}</td>
+    <td class="fw-bold text-biru">${fmt(m.total_klaim)}</td>
+  </tr>`).join('')}</tbody>`;
+}
+
+// =============================================
+// INIT — wait for Chart.js defer load
+// =============================================
+document.addEventListener('DOMContentLoaded',()=>{
+  // Chart.js loads deferred; poll until ready
+  let tries=0;
+  const wait=setInterval(()=>{
+    if(typeof Chart!=='undefined'||++tries>60){
+      clearInterval(wait);
+      if(typeof Chart!=='undefined'){
+        Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
+        initRingkasan();
+        initTren();
+        initProvinsi();
+        initKlaim();
+      }
+    }
+  },100);
+});
+</script>
+</body>
+</html>
