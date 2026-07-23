@@ -47,17 +47,18 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f0ece
   background:rgba(255,255,255,.04);pointer-events:none;
 }
 .header-inner{max-width:1100px;margin:0 auto;position:relative}
-.header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.header-title h1{font-size:clamp(16px,3.5vw,22px);font-weight:800;line-height:1.25;letter-spacing:-.2px}
-.header-title p{font-size:12px;opacity:.7;margin-top:4px;font-weight:500}
+.header-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap}
+.header-title{flex:1;min-width:0}
+.header-title h1{font-size:clamp(14px,3.5vw,22px);font-weight:800;line-height:1.25;letter-spacing:-.2px}
+.header-title p{font-size:11px;opacity:.7;margin-top:4px;font-weight:500}
 .header-stat{
   background:rgba(255,255,255,.13);
   border:1px solid rgba(255,255,255,.22);
-  border-radius:var(--r-sm);padding:10px 16px;text-align:right;white-space:nowrap;flex-shrink:0;
+  border-radius:var(--r-sm);padding:8px 12px;text-align:right;white-space:nowrap;flex-shrink:0;
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
 }
-.header-stat .st-label{font-size:9px;font-weight:700;opacity:.7;letter-spacing:.8px;text-transform:uppercase}
-.header-stat .st-val{font-size:22px;font-weight:900;line-height:1.15;letter-spacing:-.5px}
+.header-stat .st-label{font-size:8px;font-weight:700;opacity:.7;letter-spacing:.8px;text-transform:uppercase}
+.header-stat .st-val{font-size:clamp(16px,4vw,22px);font-weight:900;line-height:1.15;letter-spacing:-.5px}
 .header-stat .st-sub{font-size:10px;opacity:.6;margin-top:1px}
 
 /* ===== NAV ===== */
