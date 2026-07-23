@@ -8,47 +8,75 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
 <style>
 /* =============================================
-   CVD-SAFE PALETTE
-   Biru  #1a56a8  — utama / PU
-   Oranye #c45c00 — sekunder / BPU
-   Teal  #0b7a6e  — tersier / Jakon
-   Amber #f59e0b  — aksen
-   Abu   #f1f5f9  — zebra/bg
+   CVD-SAFE PALETTE — Opsi C: Navy + Gold + Teal
+   Navy  #1e3a5f — utama / PU / elemen dominan
+   Gold  #ca8a04 — BPU / aksen hangat
+   Teal  #0d7490 — Jakon / tersier
+   Cream #fdf8f0 — background halaman
    ============================================= */
 :root{
-  --biru:#1a56a8;--biru-tua:#0f3572;--biru-muda:#dbeafe;--biru-bg:#eff6ff;
-  --oranye:#c45c00;--oranye-bg:#fff7ed;
-  --teal:#0b7a6e;--teal-bg:#f0fdfa;
-  --amber:#f59e0b;
-  --abu:#f1f5f9;--abu2:#e2e8f0;--border:#cbd5e1;
-  --teks:#0f172a;--teks2:#475569;--teks3:#94a3b8;
+  --biru:#1e3a5f;--biru-tua:#122440;--biru-muda:#dbeafe;--biru-bg:#f0f6ff;
+  --oranye:#ca8a04;--oranye-bg:#fefce8;
+  --teal:#0d7490;--teal-bg:#ecfeff;
+  --amber:#b45309;--amber-bg:#fff7ed;
+  --abu:#f5f3ee;--abu2:#e7e3da;--border:#d6d0c4;
+  --teks:#1a1611;--teks2:#4a4540;--teks3:#9c9488;
   --putih:#ffffff;
-  --radius:10px;--radius-sm:6px;
-  --shadow:0 1px 4px rgba(0,0,0,.08);
-  --shadow-md:0 4px 16px rgba(0,0,0,.1);
-  --transition:.18s ease;
+  --r:18px;--r-sm:10px;--r-xs:6px;
+  --shadow:0 2px 8px rgba(0,0,0,.07);
+  --shadow-md:0 8px 24px rgba(0,0,0,.10);
+  --t:.18s ease;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f0f4f9;color:var(--teks);font-size:14px;line-height:1.5;min-height:100vh;display:flex;flex-direction:column}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f0ece4;color:var(--teks);font-size:14px;line-height:1.5;min-height:100vh;display:flex;flex-direction:column}
 
 /* ===== HEADER ===== */
-.site-header{background:linear-gradient(135deg,var(--biru-tua) 0%,var(--biru) 100%);color:var(--putih);padding:18px 16px 16px}
-.header-inner{max-width:1100px;margin:0 auto}
+.site-header{
+  background:linear-gradient(140deg,#0c1c30 0%,#1e3a5f 55%,#1a4d6e 100%);
+  color:var(--putih);padding:20px 16px 18px;position:relative;overflow:hidden;
+}
+.site-header::before{
+  content:'';position:absolute;right:-60px;top:-60px;
+  width:240px;height:240px;border-radius:50%;
+  background:rgba(255,255,255,.05);pointer-events:none;
+}
+.site-header::after{
+  content:'';position:absolute;right:60px;bottom:-80px;
+  width:160px;height:160px;border-radius:50%;
+  background:rgba(255,255,255,.04);pointer-events:none;
+}
+.header-inner{max-width:1100px;margin:0 auto;position:relative}
 .header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.header-title h1{font-size:clamp(15px,3vw,20px);font-weight:700;line-height:1.3}
-.header-title p{font-size:12px;opacity:.75;margin-top:3px}
-.header-stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-sm);padding:8px 14px;text-align:right;white-space:nowrap;flex-shrink:0}
-.header-stat .st-label{font-size:10px;opacity:.75;letter-spacing:.3px}
-.header-stat .st-val{font-size:20px;font-weight:800;line-height:1.2}
-.header-stat .st-sub{font-size:10px;opacity:.65}
+.header-title h1{font-size:clamp(16px,3.5vw,22px);font-weight:800;line-height:1.25;letter-spacing:-.2px}
+.header-title p{font-size:12px;opacity:.7;margin-top:4px;font-weight:500}
+.header-stat{
+  background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:var(--r-sm);padding:10px 16px;text-align:right;white-space:nowrap;flex-shrink:0;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.header-stat .st-label{font-size:9px;font-weight:700;opacity:.7;letter-spacing:.8px;text-transform:uppercase}
+.header-stat .st-val{font-size:22px;font-weight:900;line-height:1.15;letter-spacing:-.5px}
+.header-stat .st-sub{font-size:10px;opacity:.6;margin-top:1px}
 
 /* ===== NAV ===== */
-.site-nav{background:var(--putih);border-bottom:2px solid var(--biru);overflow-x:auto;-webkit-overflow-scrolling:touch;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+.site-nav{
+  background:var(--putih);border-bottom:1px solid var(--abu2);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
+}
 .nav-inner{display:flex;max-width:1100px;margin:0 auto;min-width:max-content}
-.nav-btn{display:flex;align-items:center;gap:6px;padding:11px 14px;font-size:13px;font-weight:600;color:var(--teks2);border:none;background:none;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:var(--transition);white-space:nowrap}
+.nav-btn{
+  display:flex;align-items:center;gap:6px;padding:12px 16px;
+  font-size:13px;font-weight:600;color:var(--teks2);
+  border:none;background:none;cursor:pointer;
+  border-bottom:3px solid transparent;margin-bottom:-1px;
+  transition:var(--t);white-space:nowrap;
+}
 .nav-btn svg{width:16px;height:16px;flex-shrink:0}
-.nav-btn.active{color:var(--biru);border-bottom-color:var(--biru)}
+.nav-btn.active{color:var(--biru);border-bottom-color:var(--oranye);background:var(--biru-bg)}
 .nav-btn:hover:not(.active){color:var(--biru);background:var(--biru-bg)}
 
 /* ===== LAYOUT ===== */
@@ -56,34 +84,103 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f0f4f
 .tab-panel{display:none}
 .tab-panel.active{display:block}
 
-/* ===== KPI GRID ===== */
-.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
-@media(min-width:640px){.kpi-grid{grid-template-columns:repeat(4,1fr)}}
-.kpi-card{background:var(--putih);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);border-left:4px solid var(--biru);position:relative;overflow:hidden}
-.kpi-card.orange{border-left-color:var(--oranye)}
-.kpi-card.teal{border-left-color:var(--teal)}
-.kpi-card.amber{border-left-color:var(--amber)}
-.kpi-icon{position:absolute;top:10px;right:10px;opacity:.12;width:32px;height:32px}
-.kpi-label{font-size:10px;font-weight:700;color:var(--teks2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
-.kpi-val{font-size:clamp(18px,4vw,24px);font-weight:800;color:var(--teks);line-height:1.1}
-.kpi-sub{font-size:10px;color:var(--teks2);margin-top:3px}
-.kpi-badge{display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:700;padding:2px 6px;border-radius:20px;margin-top:5px}
-.kpi-badge.up{background:#dcfce7;color:#166534}
+/* ===== BENTO GRID (Ringkasan) ===== */
+.bento{display:grid;gap:12px;margin-bottom:16px;
+  grid-template-columns:1fr 1fr;
+  grid-template-areas:
+    "hero hero"
+    "b1 b2"
+    "b3 b4"
+    "b5 b6"
+    "b7 b7";
+}
+@media(min-width:600px){
+  .bento{
+    grid-template-columns:repeat(3,1fr);
+    grid-template-areas:
+      "hero hero b1"
+      "b2 b3 b4"
+      "b5 b6 b7";
+  }
+}
+@media(min-width:900px){
+  .bento{
+    grid-template-columns:repeat(4,1fr);
+    grid-template-areas:
+      "hero hero b1 b2"
+      "b3 b4 b5 b6"
+      "b7 b7 . .";
+  }
+}
+.bento-hero{grid-area:hero}
+.bento-b1{grid-area:b1}.bento-b2{grid-area:b2}.bento-b3{grid-area:b3}
+.bento-b4{grid-area:b4}.bento-b5{grid-area:b5}.bento-b6{grid-area:b6}
+.bento-b7{grid-area:b7}
+
+/* ===== KPI CARDS (Bento style) ===== */
+.kpi-card{
+  background:var(--putih);border-radius:var(--r);padding:16px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden;
+  transition:transform var(--t),box-shadow var(--t);
+}
+.kpi-card:active{transform:scale(.98)}
+.kpi-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--biru);border-radius:var(--r) var(--r) 0 0;
+}
+.kpi-card.orange::before{background:var(--oranye)}
+.kpi-card.teal::before{background:var(--teal)}
+.kpi-card.amber::before{background:var(--amber)}
+
+/* Hero card styling */
+.kpi-card.hero{
+  background:linear-gradient(135deg,#0c1c30 0%,#1e3a5f 60%,#1a4d6e 100%);
+  color:var(--putih);
+}
+.kpi-card.hero::before{display:none}
+.kpi-card.hero .kpi-label{color:rgba(255,255,255,.7)}
+.kpi-card.hero .kpi-sub{color:rgba(255,255,255,.6)}
+.kpi-card.hero .kpi-val{color:var(--putih);font-size:clamp(28px,6vw,42px)}
+.kpi-card.hero .kpi-badge{background:rgba(255,255,255,.2);color:var(--putih);border:1px solid rgba(255,255,255,.3)}
+.kpi-card.hero .kpi-icon{opacity:.08;width:60px;height:60px}
+
+.kpi-icon{position:absolute;top:12px;right:12px;opacity:.1;width:36px;height:36px;color:var(--teks)}
+.kpi-card.hero .kpi-icon{color:var(--putih)}
+.kpi-label{font-size:10px;font-weight:700;color:var(--teks2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.kpi-val{font-size:clamp(20px,4vw,28px);font-weight:900;color:var(--teks);line-height:1.05;letter-spacing:-.5px}
+.kpi-sub{font-size:11px;color:var(--teks2);margin-top:4px}
+.kpi-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:11px;font-weight:700;padding:3px 8px;
+  border-radius:20px;margin-top:7px;
+  background:rgba(245,158,11,.12);color:var(--amber);
+}
+.kpi-badge.up{background:#dcfce7;color:#15803d}
 .kpi-badge.dn{background:#fef3c7;color:#92400e}
 
-/* ===== CARDS ===== */
-.card{background:var(--putih);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
-.card-header{padding:12px 14px 10px;border-bottom:1px solid var(--abu2);display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap}
+/* ===== REGULAR CARDS ===== */
+.card{
+  background:var(--putih);border-radius:var(--r);
+  box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px;
+}
+.card-header{
+  padding:14px 16px 11px;border-bottom:1px solid var(--abu2);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;
+}
 .card-title{font-size:13px;font-weight:700;color:var(--teks)}
-.card-sub{font-size:11px;color:var(--teks2);margin-top:1px}
+.card-sub{font-size:11px;color:var(--teks2);margin-top:2px}
 .card-body{padding:14px}
 .card-body.no-pad{padding:0}
 
-/* ===== GRID LAYOUTS ===== */
+/* ===== GRID ===== */
 .grid-2{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:700px){.grid-2{grid-template-columns:3fr 2fr}}
-.grid-3{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:700px){.grid-3{grid-template-columns:1fr 1fr 1fr}}
+@media(min-width:680px){.grid-2{grid-template-columns:3fr 2fr}}
+.grid-half{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:680px){.grid-half{grid-template-columns:1fr 1fr}}
+/* Grid 2x2 sederhana untuk 4 card flat (Tren & Klaim) */
+.grid-4kpi{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(min-width:680px){.grid-4kpi{grid-template-columns:repeat(4,1fr)}}
+.grid-4kpi .kpi-card::before{border-radius:var(--r) var(--r) 0 0}
 
 /* ===== CHART ===== */
 .chart-wrap{position:relative;width:100%}
@@ -92,34 +189,48 @@ canvas{width:100%!important}
 /* ===== TABLE ===== */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:12px;min-width:480px}
-thead th{background:var(--biru-tua);color:var(--putih);padding:9px 8px;text-align:right;font-weight:700;font-size:11px;white-space:nowrap;position:sticky;top:0;z-index:2}
+thead th{
+  background:#122440;color:var(--putih);
+  padding:9px 8px;text-align:right;font-weight:700;font-size:11px;
+  white-space:nowrap;position:sticky;top:0;z-index:2;
+}
 thead th:first-child,thead th.left{text-align:left}
 tbody tr:nth-child(even){background:var(--abu)}
-tbody tr:hover{background:var(--biru-bg)}
+tbody tr:hover{background:var(--biru-bg);transition:background var(--t)}
 tbody td{padding:7px 8px;border-bottom:1px solid var(--abu2);white-space:nowrap;text-align:right;font-size:12px}
 tbody td:first-child,tbody td.left{text-align:left;font-weight:600}
-tfoot td{background:var(--biru-tua);color:var(--putih);padding:8px;font-weight:700;text-align:right;font-size:12px}
+tfoot td{background:#122440;color:var(--putih);padding:8px;font-weight:700;text-align:right;font-size:12px}
 tfoot td:first-child,tfoot td.left{text-align:left}
 
 /* ===== RANK LIST ===== */
-.rank-list{display:flex;flex-direction:column;gap:7px}
-.rank-item{display:flex;align-items:center;gap:8px}
-.rank-no{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;border:2px solid transparent}
-.rank-no.r1{background:var(--amber);color:var(--putih)}
-.rank-no.r2{background:var(--teks2);color:var(--putih)}
-.rank-no.r3{background:var(--oranye);color:var(--putih)}
+.rank-list{display:flex;flex-direction:column;gap:8px}
+.rank-item{display:flex;align-items:center;gap:9px}
+.rank-no{
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:800;flex-shrink:0;
+}
+.rank-no.r1{background:var(--oranye);color:var(--putih)}
+.rank-no.r2{background:var(--teal);color:var(--putih)}
+.rank-no.r3{background:var(--biru);color:var(--putih)}
 .rank-no.rn{background:var(--abu2);color:var(--teks2)}
 .rank-bar-wrap{flex:1;min-width:0}
-.rank-label{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;color:var(--teks)}
-.rank-bg{background:var(--abu2);border-radius:3px;height:6px}
-.rank-fill{height:6px;border-radius:3px;background:var(--biru);transition:width .5s ease}
-.rank-fill.orange{background:var(--oranye)}
-.rank-val{font-size:11px;font-weight:700;color:var(--teks);white-space:nowrap;min-width:70px;text-align:right;flex-shrink:0}
+.rank-label{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.rank-bg{background:var(--abu2);border-radius:4px;height:6px}
+.rank-fill{height:6px;border-radius:4px;background:var(--biru);transition:width .6s ease}
+.rank-fill.gold{background:var(--oranye)}
+.rank-val{font-size:11px;font-weight:700;color:var(--teks);white-space:nowrap;min-width:72px;text-align:right;flex-shrink:0}
 
-/* ===== FILTER BAR ===== */
-.filter-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
-.filter-bar label{font-size:11px;font-weight:700;color:var(--teks2)}
-.filter-bar select{padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;color:var(--teks);background:var(--putih);cursor:pointer;max-width:100%}
+/* ===== FILTER BAR — mobile per baris ===== */
+.filter-bar{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.filter-row{display:flex;align-items:center;gap:8px}
+.filter-bar label{font-size:11px;font-weight:700;color:var(--teks2);white-space:nowrap;display:flex;align-items:center;gap:4px}
+.filter-bar select{
+  flex:1;padding:8px 12px;border:1px solid var(--border);
+  border-radius:var(--r-xs);font-size:12px;color:var(--teks);
+  background:var(--putih);cursor:pointer;
+  appearance:auto;
+}
 .filter-bar select:focus{outline:2px solid var(--biru);border-color:transparent}
 
 /* ===== LEGEND ===== */
@@ -128,19 +239,25 @@ tfoot td:first-child,tfoot td.left{text-align:left}
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 
 /* ===== SECTION TITLE ===== */
-.section-title{font-size:15px;font-weight:800;color:var(--biru-tua);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--biru-muda);display:flex;align-items:center;gap:8px}
-.section-title svg{width:18px;height:18px;flex-shrink:0}
+.section-title{
+  font-size:16px;font-weight:800;color:#122440;
+  margin-bottom:14px;padding-bottom:9px;
+  border-bottom:2px solid var(--abu2);
+  display:flex;align-items:center;gap:8px;
+}
+.section-title svg{width:18px;height:18px;flex-shrink:0;color:var(--oranye)}
 
 /* ===== FOOTER ===== */
-.site-footer{background:var(--biru-tua);color:rgba(255,255,255,.7);font-size:11px;text-align:center;padding:14px 16px;line-height:1.6;margin-top:auto}
+.site-footer{
+  background:#0c1c30;color:rgba(255,255,255,.6);
+  font-size:11px;text-align:center;padding:16px;line-height:1.7;
+  margin-top:auto;
+}
 .site-footer strong{color:var(--putih)}
 
 /* ===== UTILS ===== */
-.text-biru{color:var(--biru)}
-.text-teal{color:var(--teal)}
-.text-oranye{color:var(--oranye)}
-.fw-bold{font-weight:700}
-.mb-0{margin-bottom:0}
+.text-biru{color:var(--biru)}.text-teal{color:var(--teal)}.text-oranye{color:var(--oranye)}
+.fw-bold{font-weight:700}.mb-0{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -154,7 +271,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
         <p>Periode Januari s.d. Desember 2025</p>
       </div>
       <div class="header-stat">
-        <div class="st-label">TOTAL TENAGA KERJA</div>
+        <div class="st-label">Total Tenaga Kerja</div>
         <div class="st-val">48.649.425</div>
         <div class="st-sub">Per Desember 2025</div>
       </div>
@@ -166,7 +283,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
 <nav class="site-nav" role="navigation" aria-label="Tab navigasi">
   <div class="nav-inner">
     <button class="nav-btn active" onclick="showTab('ringkasan',this)" aria-selected="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
       Ringkasan
     </button>
     <button class="nav-btn" onclick="showTab('trend',this)">
@@ -188,7 +305,11 @@ tfoot td:first-child,tfoot td.left{text-align:left}
 
 <!-- ===== TAB: RINGKASAN ===== -->
 <section id="tab-ringkasan" class="tab-panel active">
-  <div class="kpi-grid" id="kpi-ringkasan"></div>
+
+  <div class="bento" id="bento-kpi">
+    <!-- diisi JS -->
+  </div>
+
   <div class="grid-2">
     <div class="card">
       <div class="card-header">
@@ -218,6 +339,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
       </div>
     </div>
   </div>
+
   <div class="grid-2">
     <div class="card">
       <div class="card-header">
@@ -242,6 +364,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
       </div>
     </div>
   </div>
+
   <div class="card">
     <div class="card-header">
       <div class="card-title">Rekap Bulanan – Semua Indikator</div>
@@ -258,7 +381,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     Tren Kepesertaan per Bulan
   </div>
-  <div class="kpi-grid" id="kpi-trend"></div>
+  <div class="grid-4kpi" id="bento-trend"></div>
   <div class="card">
     <div class="card-header">
       <div class="card-title">Penerima Upah (PU) Aktif</div>
@@ -266,7 +389,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
     </div>
     <div class="card-body"><div class="chart-wrap"><canvas id="chart-pu" height="200"></canvas></div></div>
   </div>
-  <div class="grid-2">
+  <div class="grid-half">
     <div class="card">
       <div class="card-header"><div class="card-title">BPU &amp; Jasa Konstruksi</div></div>
       <div class="card-body"><div class="chart-wrap"><canvas id="chart-bpu" height="200"></canvas></div></div>
@@ -291,38 +414,44 @@ tfoot td:first-child,tfoot td.left{text-align:left}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
     Data Kepesertaan per Provinsi
   </div>
+
+  <!-- Filter: 2 baris di mobile -->
   <div class="filter-bar">
-    <label for="sel-bulan">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Bulan:
-    </label>
-    <select id="sel-bulan" onchange="renderProvTable();renderProvBarChart()">
-      <option value="11">Desember 2025</option>
-      <option value="10">November 2025</option>
-      <option value="9">Oktober 2025</option>
-      <option value="8">September 2025</option>
-      <option value="7">Agustus 2025</option>
-      <option value="6">Juli 2025</option>
-      <option value="5">Juni 2025</option>
-      <option value="4">Mei 2025</option>
-      <option value="3">April 2025</option>
-      <option value="2">Maret 2025</option>
-      <option value="1">Februari 2025</option>
-      <option value="0">Januari 2025</option>
-    </select>
-    <label for="sel-sort">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      Urutkan:
-    </label>
-    <select id="sel-sort" onchange="renderProvTable();renderProvBarChart()">
-      <option value="total_tk">Total Tenaga Kerja</option>
-      <option value="pu">PU Aktif</option>
-      <option value="bpu">BPU Aktif</option>
-      <option value="jakon">Jasa Konstruksi</option>
-      <option value="perusahaan">Perusahaan</option>
-      <option value="no">Urut Wilayah</option>
-    </select>
+    <div class="filter-row">
+      <label for="sel-bulan">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Bulan:
+      </label>
+      <select id="sel-bulan" onchange="renderProvTable();renderProvBarChart()">
+        <option value="11">Desember 2025</option>
+        <option value="10">November 2025</option>
+        <option value="9">Oktober 2025</option>
+        <option value="8">September 2025</option>
+        <option value="7">Agustus 2025</option>
+        <option value="6">Juli 2025</option>
+        <option value="5">Juni 2025</option>
+        <option value="4">Mei 2025</option>
+        <option value="3">April 2025</option>
+        <option value="2">Maret 2025</option>
+        <option value="1">Februari 2025</option>
+        <option value="0">Januari 2025</option>
+      </select>
+    </div>
+    <div class="filter-row">
+      <label for="sel-sort">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Urutkan:
+      </label>
+      <select id="sel-sort" onchange="renderProvTable();renderProvBarChart()">
+        <option value="total_tk">Total Tenaga Kerja</option>
+        <option value="pu">PU Aktif</option>
+        <option value="bpu">BPU Aktif</option>
+        <option value="jakon">Jasa Konstruksi</option>
+        <option value="perusahaan">Perusahaan</option>
+      </select>
+    </div>
   </div>
+
   <div class="grid-2">
     <div class="card">
       <div class="card-header">
@@ -342,11 +471,12 @@ tfoot td:first-child,tfoot td.left{text-align:left}
       </div>
       <div class="card-body">
         <label for="sel-prov" style="display:block;font-size:11px;font-weight:700;color:var(--teks2);margin-bottom:5px">Pilih provinsi:</label>
-        <select id="sel-prov" onchange="renderProvTrend()" style="width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;margin-bottom:10px"></select>
+        <select id="sel-prov" onchange="renderProvTrend()" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--r-xs);font-size:12px;margin-bottom:12px"></select>
         <div class="chart-wrap"><canvas id="chart-prov-trend" height="190"></canvas></div>
       </div>
     </div>
   </div>
+
   <div class="card">
     <div class="card-header">
       <div class="card-title">Tabel Data Per Provinsi</div>
@@ -364,7 +494,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
     Klaim &amp; Nilai Manfaat
   </div>
-  <div class="kpi-grid" id="kpi-klaim"></div>
+  <div class="grid-4kpi" id="bento-klaim"></div>
   <div class="grid-2">
     <div class="card">
       <div class="card-header"><div class="card-title">Klaim Kumulatif per Segmen</div></div>
@@ -389,7 +519,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
     <div class="card-header"><div class="card-title">Nilai Manfaat Kumulatif (Miliar Rupiah)</div></div>
     <div class="card-body"><div class="chart-wrap"><canvas id="chart-nilai" height="180"></canvas></div></div>
   </div>
-  <div class="grid-2">
+  <div class="grid-half">
     <div class="card">
       <div class="card-header">
         <div class="card-title">Top 10 Provinsi – Klaim Terbanyak</div>
@@ -400,9 +530,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
       </div>
     </div>
     <div class="card">
-      <div class="card-header">
-        <div class="card-title">Tabel Rekap Klaim Bulanan</div>
-      </div>
+      <div class="card-header"><div class="card-title">Rekap Klaim Bulanan</div></div>
       <div class="card-body no-pad">
         <div class="tbl-wrap"><table id="tbl-klaim"></table></div>
       </div>
@@ -412,7 +540,6 @@ tfoot td:first-child,tfoot td.left{text-align:left}
 
 </main>
 
-<!-- FOOTER -->
 <footer class="site-footer">
   <strong>Sumber:</strong> BPJS Ketenagakerjaan, diolah oleh Mediator HI Ahli Muda – Tommy, S.Kom., M.M. – Direktorat Jaminan Sosial Tenaga Kerja dan Fasilitasi Kesejahteraan Pekerja
 </footer>
@@ -425,21 +552,34 @@ const D={"monthly":[{"bulan":"Januari","perusahaan":845824,"pu_aktif":26893712,"
 
 const MO=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
 const MO_FULL=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const CLR={biru:'#1a56a8',oranye:'#c45c00',teal:'#0b7a6e',amber:'#f59e0b',biru2:'#3b82f6',teal2:'#14b8a6'};
+const CLR={biru:'#1e3a5f',oranye:'#ca8a04',teal:'#0d7490',amber:'#b45309'};
 
-// =============================================
-// HELPERS
-// =============================================
 const fmt=n=>Math.round(n).toLocaleString('id-ID');
 const fmtM=n=>{n=+n;if(n>=1e12)return(n/1e12).toFixed(2)+' T';if(n>=1e9)return(n/1e9).toFixed(1)+' M';return fmt(n);};
 const pct=(a,b)=>{const d=(a-b)/b*100;return(d>=0?'+':'')+d.toFixed(1)+'%';};
-const pctNum=(a,b)=>(a-b)/b*100;
+const isUp=v=>v.startsWith('+');
 
 const charts={};
-function mkChart(id,cfg){if(charts[id])charts[id].destroy();const c=document.getElementById(id);if(!c)return;charts[id]=new Chart(c,cfg);}
+function mkChart(id,cfg){
+  if(charts[id])charts[id].destroy();
+  const c=document.getElementById(id);
+  if(!c)return;
+  charts[id]=new Chart(c,cfg);
+}
+const sX=()=>({x:{ticks:{font:{size:10}},grid:{display:false}}});
+const sY=(cb)=>({y:{ticks:{font:{size:10},callback:cb},grid:{color:'#e7e3da'}}});
 
-const scaleY=(cb)=>({y:{ticks:{font:{size:10},callback:cb},grid:{color:'#f1f5f9'}}});
-const scaleX=()=>({x:{ticks:{font:{size:10}},grid:{display:false}}});
+// SVG icons inline
+const ICONS={
+  workers:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`,
+  pu:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>`,
+  bpu:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`,
+  building:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`,
+  construct:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"/></svg>`,
+  doc:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`,
+  money:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+  chart:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>`,
+};
 
 // =============================================
 // TAB NAVIGATION
@@ -452,13 +592,36 @@ function showTab(id,btn){
 }
 
 // =============================================
-// RINGKASAN TAB
+// BENTO KPI BUILDER
+// =============================================
+function buildBento(containerId, items){
+  const areas=['hero','b1','b2','b3','b4','b5','b6','b7'];
+  const el=document.getElementById(containerId);
+  if(!el)return;
+  // Deteksi apakah container adalah flat grid (bukan bento hero)
+  const isFlat=el.classList.contains('grid-4kpi');
+  el.innerHTML=items.map((k,i)=>{
+    const area=isFlat?'auto':(areas[i]||'auto');
+    const heroClass=(!isFlat&&i===0)?' hero':'';
+    const areaStyle=isFlat?'':` style="grid-area:${area}"`;
+    return`<div class="kpi-card${heroClass} ${k.cls||''}"${areaStyle}>
+      <div class="kpi-icon">${ICONS[k.icon]||''}</div>
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-val">${k.val}</div>
+      <div class="kpi-sub">${k.sub}</div>
+      ${k.badge!=null?`<span class="kpi-badge ${isUp(k.badge)?'up':'dn'}">${k.badge} vs Jan</span>`:''}
+    </div>`;
+  }).join('');
+}
+
+// =============================================
+// RINGKASAN
 // =============================================
 function initRingkasan(){
-  const dec=D.monthly[11], jan=D.monthly[0];
+  const dec=D.monthly[11],jan=D.monthly[0];
+  const vpk=Math.round(dec.total_nilai/dec.total_klaim);
 
-  // KPI
-  const kpis=[
+  buildBento('bento-kpi',[
     {label:'Total Tenaga Kerja',val:fmt(dec.total_tk),sub:'Aktif Des 2025',badge:pct(dec.total_tk,jan.total_tk),cls:'',icon:'workers'},
     {label:'Penerima Upah (PU)',val:fmt(dec.pu_aktif),sub:'Aktif WNI+WNA',badge:pct(dec.pu_aktif,jan.pu_aktif),cls:'',icon:'pu'},
     {label:'Bukan Penerima Upah',val:fmt(dec.bpu_aktif),sub:'BPU Aktif',badge:pct(dec.bpu_aktif,jan.bpu_aktif),cls:'orange',icon:'bpu'},
@@ -466,46 +629,24 @@ function initRingkasan(){
     {label:'Jasa Konstruksi',val:fmt(dec.jakon),sub:'Aktif Jakon',badge:pct(dec.jakon,jan.jakon),cls:'amber',icon:'construct'},
     {label:'Total Klaim Kum.',val:fmt(dec.total_klaim),sub:'s.d Desember 2025',badge:null,cls:'orange',icon:'doc'},
     {label:'Nilai Manfaat Kum.',val:fmtM(dec.total_nilai),sub:'Rupiah, s.d Des 2025',badge:null,cls:'teal',icon:'money'},
-    {label:'PU Aktif Laki-laki',val:fmt(dec.pu_laki),sub:((dec.pu_laki/dec.pu_aktif)*100).toFixed(1)+'% dari PU',badge:null,cls:'',icon:'male'},
-  ];
-  const ICONS={
-    workers:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`,
-    pu:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>`,
-    bpu:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`,
-    building:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`,
-    construct:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"/></svg>`,
-    doc:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`,
-    money:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
-    male:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3zm14-2a2 2 0 100-4 2 2 0 000 4zm0 2a4 4 0 00-3.446 1.979c.504.135 1.015.214 1.543.214.527 0 1.038-.079 1.543-.214A4 4 0 0017 18z"/></svg>`,
-  };
-  document.getElementById('kpi-ringkasan').innerHTML=kpis.map(k=>`
-    <div class="kpi-card ${k.cls}">
-      <div class="kpi-icon">${ICONS[k.icon]||''}</div>
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-val">${k.val}</div>
-      <div class="kpi-sub">${k.sub}</div>
-      ${k.badge!=null?`<span class="kpi-badge ${pctNum(dec[k.label],jan[k.label])>=0?'up':'dn'}">${k.badge} vs Jan</span>`:''}
-    </div>`).join('');
+    {label:'Rata-rata Nilai per Klaim',val:'Rp '+fmt(vpk),sub:'Total nilai ÷ total klaim',badge:null,cls:'amber',icon:'chart'},
+  ]);
 
-  // Chart tren TK
   mkChart('chart-tren-tk',{type:'line',data:{labels:MO,datasets:[
-    {label:'Total TK Aktif',data:D.monthly.map(m=>m.total_tk),borderColor:CLR.biru,backgroundColor:'rgba(26,86,168,.1)',fill:true,tension:.35,pointRadius:4,borderWidth:2.5},
+    {label:'Total TK Aktif',data:D.monthly.map(m=>m.total_tk),borderColor:CLR.biru,backgroundColor:'rgba(30,58,95,.1)',fill:true,tension:.35,pointRadius:4,borderWidth:2.5},
     {label:'PU Aktif',data:D.monthly.map(m=>m.pu_aktif),borderColor:CLR.teal,tension:.3,pointRadius:3,borderWidth:1.5,borderDash:[4,3]},
     {label:'BPU Aktif',data:D.monthly.map(m=>m.bpu_aktif),borderColor:CLR.oranye,tension:.3,pointRadius:3,borderWidth:1.5,borderDash:[4,3]},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},padding:10}}},scales:{...scaleX(),...scaleY(v=>fmtM(v))}}});
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},padding:10}}},scales:{...sX(),...sY(v=>fmtM(v))}}});
 
-  // Donut komposisi
-  mkChart('chart-donut',{type:'doughnut',data:{labels:['PU','BPU','Jakon'],datasets:[{data:[dec.pu_aktif,dec.bpu_aktif,dec.jakon],backgroundColor:[CLR.biru,CLR.oranye,CLR.teal],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${fmt(c.parsed)} (${(c.parsed/dec.total_tk*100).toFixed(1)}%)`}}}}});
+  mkChart('chart-donut',{type:'doughnut',data:{labels:['PU','BPU','Jakon'],datasets:[{data:[dec.pu_aktif,dec.bpu_aktif,dec.jakon],backgroundColor:[CLR.biru,CLR.oranye,CLR.teal],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${fmt(c.parsed)} (${(c.parsed/dec.total_tk*100).toFixed(1)}%)`}}}}});
 
-  // Index chart
   const j=D.monthly[0];
   mkChart('chart-index',{type:'line',data:{labels:MO,datasets:[
     {label:'PU',data:D.monthly.map(m=>(m.pu_aktif/j.pu_aktif*100).toFixed(1)),borderColor:CLR.biru,tension:.3,pointRadius:3,borderWidth:2},
     {label:'BPU',data:D.monthly.map(m=>(m.bpu_aktif/j.bpu_aktif*100).toFixed(1)),borderColor:CLR.oranye,tension:.3,pointRadius:3,borderWidth:2},
     {label:'Perusahaan',data:D.monthly.map(m=>(m.perusahaan/j.perusahaan*100).toFixed(1)),borderColor:CLR.teal,tension:.3,pointRadius:3,borderWidth:2},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{...scaleX(),...scaleY(v=>v+'')}}});
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{...sX(),...sY(v=>v+'')}}});
 
-  // Top 10 rank
   const sorted=[...D.provinces_dec].sort((a,b)=>b.total_tk-a.total_tk).slice(0,10);
   const maxTK=sorted[0].total_tk;
   document.getElementById('rank-top10').innerHTML=sorted.map((p,i)=>{
@@ -520,7 +661,6 @@ function initRingkasan(){
     </div>`;
   }).join('');
 
-  // Table monthly
   const el=document.getElementById('tbl-monthly');
   el.innerHTML=`<thead><tr>
     <th class="left">Bulan</th><th>Perusahaan</th><th>PU Aktif</th><th>BPU Aktif</th>
@@ -539,46 +679,39 @@ function initRingkasan(){
 }
 
 // =============================================
-// TREN TAB
+// TREN
 // =============================================
 function initTren(){
   const dec=D.monthly[11],jan=D.monthly[0];
-  // KPI tren
-  document.getElementById('kpi-trend').innerHTML=[
-    {label:'Pertumbuhan Total TK',val:pct(dec.total_tk,jan.total_tk),sub:'Jan → Des 2025',cls:''},
-    {label:'Pertumbuhan PU',val:pct(dec.pu_aktif,jan.pu_aktif),sub:'Penerima Upah',cls:''},
-    {label:'Pertumbuhan BPU',val:pct(dec.bpu_aktif,jan.bpu_aktif),sub:'Bukan Penerima Upah',cls:'orange'},
-    {label:'Pertumbuhan Perusahaan',val:pct(dec.perusahaan,jan.perusahaan),sub:'Peserta aktif',cls:'teal'},
-  ].map(k=>`<div class="kpi-card ${k.cls}">
-    <div class="kpi-label">${k.label}</div>
-    <div class="kpi-val" style="color:${k.val.startsWith('+')?'var(--teal)':'var(--oranye)'};font-size:20px">${k.val}</div>
-    <div class="kpi-sub">${k.sub}</div>
-  </div>`).join('');
+  buildBento('bento-trend',[
+    {label:'Pertumbuhan Total TK',val:pct(dec.total_tk,jan.total_tk),sub:'Jan → Des 2025',cls:'',icon:'workers'},
+    {label:'Pertumbuhan PU',val:pct(dec.pu_aktif,jan.pu_aktif),sub:'Penerima Upah',cls:'',icon:'pu'},
+    {label:'Pertumbuhan BPU',val:pct(dec.bpu_aktif,jan.bpu_aktif),sub:'Bukan Penerima Upah',cls:'orange',icon:'bpu'},
+    {label:'Pertumbuhan Perusahaan',val:pct(dec.perusahaan,jan.perusahaan),sub:'Peserta aktif',cls:'teal',icon:'building'},
+  ]);
+  // Override val color for trend cards
+  document.querySelectorAll('#bento-trend .kpi-val').forEach(el=>{
+    const v=el.textContent;
+    el.style.color=v.startsWith('+')?'var(--teal)':'var(--oranye)';
+    el.style.fontSize='clamp(22px,5vw,32px)';
+  });
 
-  mkChart('chart-pu',{type:'bar',data:{labels:MO,datasets:[
-    {label:'PU Aktif',data:D.monthly.map(m=>m.pu_aktif),backgroundColor:CLR.biru,borderRadius:3},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{...scaleX(),...scaleY(v=>fmtM(v))}}});
-
+  mkChart('chart-pu',{type:'bar',data:{labels:MO,datasets:[{label:'PU Aktif',data:D.monthly.map(m=>m.pu_aktif),backgroundColor:CLR.biru,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{...sX(),...sY(v=>fmtM(v))}}});
   mkChart('chart-bpu',{type:'line',data:{labels:MO,datasets:[
-    {label:'BPU Aktif',data:D.monthly.map(m=>m.bpu_aktif),borderColor:CLR.oranye,backgroundColor:'rgba(196,92,0,.1)',fill:true,tension:.3,pointRadius:4,borderWidth:2},
+    {label:'BPU Aktif',data:D.monthly.map(m=>m.bpu_aktif),borderColor:CLR.oranye,backgroundColor:'rgba(202,138,4,.1)',fill:true,tension:.3,pointRadius:4,borderWidth:2},
     {label:'Jasa Konstruksi',data:D.monthly.map(m=>m.jakon),borderColor:CLR.teal,tension:.3,pointRadius:4,borderWidth:2},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{...scaleX(),...scaleY(v=>fmtM(v))}}});
-
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{...sX(),...sY(v=>fmtM(v))}}});
   mkChart('chart-gender',{type:'bar',data:{labels:MO,datasets:[
-    {label:'Laki-laki',data:D.monthly.map(m=>m.pu_laki),backgroundColor:CLR.biru,stack:'s'},
-    {label:'Perempuan',data:D.monthly.map(m=>m.pu_perempuan),backgroundColor:CLR.oranye,stack:'s'},
+    {label:'Laki-laki',data:D.monthly.map(m=>m.pu_laki),backgroundColor:CLR.biru,stack:'s',borderRadius:2},
+    {label:'Perempuan',data:D.monthly.map(m=>m.pu_perempuan),backgroundColor:CLR.oranye,stack:'s',borderRadius:2},
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{x:{stacked:true,ticks:{font:{size:10}},grid:{display:false}},y:{stacked:true,ticks:{font:{size:10},callback:v=>fmtM(v)}}}}});
-
-  mkChart('chart-perus',{type:'line',data:{labels:MO,datasets:[
-    {label:'Perusahaan',data:D.monthly.map(m=>m.perusahaan),borderColor:CLR.teal,backgroundColor:'rgba(11,122,110,.08)',fill:true,tension:.3,pointRadius:4,borderWidth:2},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{...scaleX(),...scaleY(v=>(v/1000).toFixed(0)+'K')}}});
+  mkChart('chart-perus',{type:'line',data:{labels:MO,datasets:[{label:'Perusahaan',data:D.monthly.map(m=>m.perusahaan),borderColor:CLR.teal,backgroundColor:'rgba(13,116,144,.08)',fill:true,tension:.3,pointRadius:4,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{...sX(),...sY(v=>(v/1000).toFixed(0)+'K')}}});
 }
 
 // =============================================
-// PROVINSI TAB
+// PROVINSI
 // =============================================
 function initProvinsi(){
-  // Populate dropdown provinsi
   const sel=document.getElementById('sel-prov');
   sel.innerHTML=Object.keys(D.prov_monthly).map(p=>`<option value="${p}">${p}</option>`).join('');
   renderProvTable();
@@ -588,9 +721,8 @@ function initProvinsi(){
 
 function getProvData(bi){
   return D.provinces_dec.map(p=>{
-    const key=Object.keys(D.prov_monthly).find(k=>k===p.prov||k.toLowerCase()===p.prov.toLowerCase())||p.prov;
-    const tk=(D.prov_monthly[key]||[])[bi]??p.total_tk;
-    return{...p,total_tk_m:tk};
+    const vals=D.prov_monthly[p.prov]||D.prov_monthly[Object.keys(D.prov_monthly).find(k=>k.toLowerCase()===p.prov.toLowerCase())]||[];
+    return{...p,total_tk_m:vals[bi]??p.total_tk};
   });
 }
 
@@ -599,7 +731,7 @@ function renderProvBarChart(){
   const data=getProvData(bi);
   const top10=[...data].sort((a,b)=>b.total_tk_m-a.total_tk_m).slice(0,10);
   document.getElementById('prov-bar-sub').textContent=MO_FULL[bi]+' 2025';
-  mkChart('chart-prov-bar',{type:'bar',data:{labels:top10.map(p=>p.prov),datasets:[{label:'Total TK',data:top10.map(p=>p.total_tk_m),backgroundColor:top10.map((_,i)=>i===0?CLR.biru:i<3?CLR.teal:'rgba(26,86,168,.55)'),borderRadius:3}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},callback:v=>fmtM(v)},grid:{color:'#f1f5f9'}},y:{ticks:{font:{size:10}},grid:{display:false}}}}});
+  mkChart('chart-prov-bar',{type:'bar',data:{labels:top10.map(p=>p.prov),datasets:[{label:'Total TK',data:top10.map(p=>p.total_tk_m),backgroundColor:top10.map((_,i)=>i===0?CLR.oranye:i<3?CLR.teal:'rgba(30,58,95,.55)'),borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},callback:v=>fmtM(v)},grid:{color:'#f1f5f9'}},y:{ticks:{font:{size:10}},grid:{display:false}}}}});
 }
 
 function renderProvTable(){
@@ -607,12 +739,10 @@ function renderProvTable(){
   const sk=document.getElementById('sel-sort').value;
   const sub=MO_FULL[bi]+' 2025';
   document.getElementById('prov-tbl-sub').textContent=sub;
-  document.getElementById('prov-bar-sub').textContent=sub;
   let data=getProvData(bi);
-  if(sk==='no') data.sort((a,b)=>a.no-b.no);
-  else if(sk==='total_tk') data.sort((a,b)=>b.total_tk_m-a.total_tk_m);
+  if(sk==='total_tk') data.sort((a,b)=>b.total_tk_m-a.total_tk_m);
   else data.sort((a,b)=>b[sk]-a[sk]);
-  const totals=data.reduce((acc,p)=>({perusahaan:acc.perusahaan+p.perusahaan,pu:acc.pu+p.pu,bpu:acc.bpu+p.bpu,jakon:acc.jakon+p.jakon,tk:acc.tk+p.total_tk_m}),{perusahaan:0,pu:0,bpu:0,jakon:0,tk:0});
+  const tot=data.reduce((a,p)=>({pr:a.pr+p.perusahaan,pu:a.pu+p.pu,bpu:a.bpu+p.bpu,jk:a.jk+p.jakon,tk:a.tk+p.total_tk_m}),{pr:0,pu:0,bpu:0,jk:0,tk:0});
   document.getElementById('tbl-prov').innerHTML=`<thead><tr>
     <th class="left">No</th><th class="left">Provinsi</th>
     <th>Perusahaan</th><th>PU Aktif</th><th>BPU Aktif</th><th>Jakon</th><th>Total TK</th>
@@ -622,32 +752,28 @@ function renderProvTable(){
     <td>${fmt(p.jakon)}</td><td class="fw-bold text-biru">${fmt(p.total_tk_m)}</td>
   </tr>`).join('')}</tbody><tfoot><tr>
     <td class="left" colspan="2">JUMLAH</td>
-    <td>${fmt(totals.perusahaan)}</td><td>${fmt(totals.pu)}</td><td>${fmt(totals.bpu)}</td>
-    <td>${fmt(totals.jakon)}</td><td>${fmt(totals.tk)}</td>
+    <td>${fmt(tot.pr)}</td><td>${fmt(tot.pu)}</td><td>${fmt(tot.bpu)}</td>
+    <td>${fmt(tot.jk)}</td><td>${fmt(tot.tk)}</td>
   </tr></tfoot>`;
 }
 
 function renderProvTrend(){
   const prov=document.getElementById('sel-prov').value;
   const vals=D.prov_monthly[prov]||[];
-  mkChart('chart-prov-trend',{type:'line',data:{labels:MO,datasets:[{label:prov,data:vals,borderColor:CLR.biru,backgroundColor:'rgba(26,86,168,.1)',fill:true,tension:.35,pointRadius:4,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{...scaleX(),...scaleY(v=>fmt(v))}}});
+  mkChart('chart-prov-trend',{type:'line',data:{labels:MO,datasets:[{label:prov,data:vals,borderColor:CLR.biru,backgroundColor:'rgba(30,58,95,.1)',fill:true,tension:.35,pointRadius:4,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{...sX(),...sY(v=>fmt(v))}}});
 }
 
 // =============================================
-// KLAIM TAB
+// KLAIM
 // =============================================
 function initKlaim(){
   const dec=D.monthly[11];
-  document.getElementById('kpi-klaim').innerHTML=[
-    {label:'Total Klaim Kum.',val:fmt(dec.total_klaim),sub:'PU + BPU + Jakon',cls:''},
-    {label:'Klaim PU Kum.',val:fmt(dec.klaim_pu),sub:'Penerima Upah',cls:''},
-    {label:'Nilai Manfaat Kum.',val:fmtM(dec.total_nilai),sub:'Rupiah, s.d Des 2025',cls:'teal'},
-    {label:'Klaim BPU + Jakon',val:fmt(dec.klaim_bpu+dec.klaim_jakon),sub:`BPU: ${fmt(dec.klaim_bpu)} | Jakon: ${fmt(dec.klaim_jakon)}`,cls:'orange'},
-  ].map(k=>`<div class="kpi-card ${k.cls}">
-    <div class="kpi-label">${k.label}</div>
-    <div class="kpi-val">${k.val}</div>
-    <div class="kpi-sub">${k.sub}</div>
-  </div>`).join('');
+  buildBento('bento-klaim',[
+    {label:'Total Klaim Kum.',val:fmt(dec.total_klaim),sub:'PU + BPU + Jakon',cls:'',icon:'doc'},
+    {label:'Klaim PU Kum.',val:fmt(dec.klaim_pu),sub:'Penerima Upah',cls:'',icon:'pu'},
+    {label:'Nilai Manfaat Kum.',val:fmtM(dec.total_nilai),sub:'Rupiah, s.d Des 2025',cls:'teal',icon:'money'},
+    {label:'Klaim BPU + Jakon',val:fmt(dec.klaim_bpu+dec.klaim_jakon),sub:`BPU: ${fmt(dec.klaim_bpu)} | Jakon: ${fmt(dec.klaim_jakon)}`,cls:'orange',icon:'construct'},
+  ]);
 
   mkChart('chart-klaim-bar',{type:'bar',data:{labels:MO,datasets:[
     {label:'Klaim PU',data:D.monthly.map(m=>m.klaim_pu),backgroundColor:CLR.biru,stack:'k',borderRadius:2},
@@ -655,15 +781,14 @@ function initKlaim(){
     {label:'Klaim Jakon',data:D.monthly.map(m=>m.klaim_jakon),backgroundColor:CLR.teal,stack:'k',borderRadius:2},
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{x:{stacked:true,ticks:{font:{size:10}},grid:{display:false}},y:{stacked:true,ticks:{font:{size:10}}}}}});
 
-  mkChart('chart-klaim-donut',{type:'doughnut',data:{labels:['PU','BPU','Jakon'],datasets:[{data:[dec.klaim_pu,dec.klaim_bpu,dec.klaim_jakon],backgroundColor:[CLR.biru,CLR.oranye,CLR.teal],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:false}}}});
+  mkChart('chart-klaim-donut',{type:'doughnut',data:{labels:['PU','BPU','Jakon'],datasets:[{data:[dec.klaim_pu,dec.klaim_bpu,dec.klaim_jakon],backgroundColor:[CLR.biru,CLR.oranye,CLR.teal],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{display:false}}}});
 
   mkChart('chart-nilai',{type:'line',data:{labels:MO,datasets:[
-    {label:'Nilai PU',data:D.monthly.map(m=>m.nilai_pu/1e9),borderColor:CLR.biru,backgroundColor:'rgba(26,86,168,.08)',fill:true,tension:.3,pointRadius:3,borderWidth:2},
+    {label:'Nilai PU',data:D.monthly.map(m=>m.nilai_pu/1e9),borderColor:CLR.biru,backgroundColor:'rgba(30,58,95,.08)',fill:true,tension:.3,pointRadius:3,borderWidth:2},
     {label:'Nilai BPU',data:D.monthly.map(m=>m.nilai_bpu/1e9),borderColor:CLR.oranye,tension:.3,pointRadius:3,borderWidth:2},
     {label:'Nilai Jakon',data:D.monthly.map(m=>m.nilai_jakon/1e9),borderColor:CLR.teal,tension:.3,pointRadius:3,borderWidth:2},
-  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>c.dataset.label+': Rp '+c.parsed.y.toFixed(0)+' M'}}},scales:{...scaleX(),...scaleY(v=>'Rp '+v.toFixed(0)+'M')}}});
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>c.dataset.label+': Rp '+c.parsed.y.toFixed(0)+' M'}}},scales:{...sX(),...sY(v=>'Rp '+v.toFixed(0)+'M')}}});
 
-  // Top 10 klaim rank
   const top10k=[...D.provinces_dec].sort((a,b)=>b.klaim-a.klaim).slice(0,10);
   const maxK=top10k[0].klaim;
   document.getElementById('rank-klaim').innerHTML=top10k.map((p,i)=>{
@@ -672,13 +797,12 @@ function initKlaim(){
       <div class="rank-no ${cls}">${i+1}</div>
       <div class="rank-bar-wrap">
         <div class="rank-label">${p.prov}</div>
-        <div class="rank-bg"><div class="rank-fill orange" style="width:${(p.klaim/maxK*100).toFixed(1)}%"></div></div>
+        <div class="rank-bg"><div class="rank-fill gold" style="width:${(p.klaim/maxK*100).toFixed(1)}%"></div></div>
       </div>
       <div class="rank-val">${fmt(p.klaim)}</div>
     </div>`;
   }).join('');
 
-  // Tabel klaim bulanan
   document.getElementById('tbl-klaim').innerHTML=`<thead><tr>
     <th class="left">Bulan</th><th>Klaim PU</th><th>Klaim BPU</th><th>Klaim Jakon</th><th>Total</th>
   </tr></thead><tbody>${D.monthly.map(m=>`<tr>
@@ -689,10 +813,9 @@ function initKlaim(){
 }
 
 // =============================================
-// INIT — wait for Chart.js defer load
+// INIT
 // =============================================
 document.addEventListener('DOMContentLoaded',()=>{
-  // Chart.js loads deferred; poll until ready
   let tries=0;
   const wait=setInterval(()=>{
     if(typeof Chart!=='undefined'||++tries>60){
@@ -708,7 +831,5 @@ document.addEventListener('DOMContentLoaded',()=>{
   },100);
 });
 </script>
-
 </body>
 </html>
-
