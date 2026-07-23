@@ -151,7 +151,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
     <div class="header-top">
       <div class="header-title">
         <h1>Rekapitulasi Kepesertaan &amp; Klaim<br>BPJS Ketenagakerjaan 2025</h1>
-        <p>Periode Januari s.d. Desember 2025 &nbsp;|&nbsp; 34 Provinsi Seluruh Indonesia</p>
+        <p>Periode Januari s.d. Desember 2025</p>
       </div>
       <div class="header-stat">
         <div class="st-label">TOTAL TENAGA KERJA</div>
@@ -334,8 +334,14 @@ tfoot td:first-child,tfoot td.left{text-align:left}
       <div class="card-body"><div class="chart-wrap"><canvas id="chart-prov-bar" height="240"></canvas></div></div>
     </div>
     <div class="card">
-      <div class="card-header"><div class="card-title">Tren Provinsi Terpilih</div></div>
+      <div class="card-header">
+        <div>
+          <div class="card-title">Tren TK Bulanan – Pilih Provinsi</div>
+          <div class="card-sub">Jan s.d. Des 2025</div>
+        </div>
+      </div>
       <div class="card-body">
+        <label for="sel-prov" style="display:block;font-size:11px;font-weight:700;color:var(--teks2);margin-bottom:5px">Pilih provinsi:</label>
         <select id="sel-prov" onchange="renderProvTrend()" style="width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;margin-bottom:10px"></select>
         <div class="chart-wrap"><canvas id="chart-prov-trend" height="190"></canvas></div>
       </div>
