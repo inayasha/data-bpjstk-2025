@@ -224,15 +224,17 @@ tfoot td:first-child,tfoot td.left{text-align:left}
 
 /* ===== FILTER BAR — mobile per baris ===== */
 .filter-bar{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
-.filter-row{display:flex;align-items:center;gap:8px}
-.filter-bar label{font-size:12px;font-weight:700;color:var(--teks2);white-space:nowrap;display:flex;align-items:center;gap:4px}
-.filter-bar select{
+.filter-bar-inline{display:flex;flex-direction:column;gap:8px;margin-bottom:0}
+@media(min-width:600px){.filter-bar-inline{flex-direction:row;align-items:flex-start;flex-wrap:wrap;gap:12px}}
+.filter-row{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.filter-bar label,.filter-bar-inline label{font-size:12px;font-weight:700;color:var(--teks2);white-space:nowrap;display:flex;align-items:center;gap:4px}
+.filter-bar select,.filter-bar-inline select{
   flex:1;padding:8px 12px;border:1px solid var(--border);
   border-radius:var(--r-xs);font-size:12px;color:var(--teks);
   background:var(--putih);cursor:pointer;
-  appearance:auto;
+  appearance:auto;min-width:0;
 }
-.filter-bar select:focus{outline:2px solid var(--biru);border-color:transparent}
+.filter-bar select:focus,.filter-bar-inline select:focus{outline:2px solid var(--biru);border-color:transparent}
 
 /* ===== LEGEND ===== */
 .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
@@ -479,16 +481,6 @@ tfoot td:first-child,tfoot td.left{text-align:left}
   </div>
 
   <div class="card">
-    <div class="card-header">
-      <div>
-        <div class="card-title">Top 10 Provinsi – Total TK</div>
-        <div class="card-sub" id="prov-bar-sub">Desember 2025</div>
-      </div>
-    </div>
-    <div class="card-body"><div class="chart-wrap"><canvas id="chart-prov-bar" height="240"></canvas></div></div>
-  </div>
-
-  <div class="card">
     <div class="card-header" style="flex-direction:column;align-items:stretch;gap:10px">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
         <div>
@@ -496,34 +488,40 @@ tfoot td:first-child,tfoot td.left{text-align:left}
           <div class="card-sub" id="prov-tbl-sub">Desember 2025</div>
         </div>
       </div>
-      <!-- Filter tepat di atas tabel -->
-      <div class="filter-bar" style="margin-bottom:0">
+      <!-- Filter: sejajar desktop, 2 baris mobile -->
+      <div class="filter-bar-inline" style="margin-bottom:0">
         <div class="filter-row">
           <label for="sel-bulan">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             Bulan:
           </label>
-          <select id="sel-bulan" onchange="renderProvTable();renderProvBarChart()">
-            <option value="11">Desember 2025</option>
-            <option value="10">November 2025</option>
-            <option value="9">Oktober 2025</option>
-            <option value="8">September 2025</option>
-            <option value="7">Agustus 2025</option>
-            <option value="6">Juli 2025</option>
-            <option value="5">Juni 2025</option>
-            <option value="4">Mei 2025</option>
-            <option value="3">April 2025</option>
-            <option value="2">Maret 2025</option>
-            <option value="1">Februari 2025</option>
-            <option value="0">Januari 2025</option>
+          <select id="sel-bulan" onchange="renderProvTable()">
+            <optgroup label="Pilih Bulan">
+              <option value="11">Desember 2025</option>
+              <option value="10">November 2025</option>
+              <option value="9">Oktober 2025</option>
+              <option value="8">September 2025</option>
+              <option value="7">Agustus 2025</option>
+              <option value="6">Juli 2025</option>
+              <option value="5">Juni 2025</option>
+              <option value="4">Mei 2025</option>
+              <option value="3">April 2025</option>
+              <option value="2">Maret 2025</option>
+              <option value="1">Februari 2025</option>
+              <option value="0">Januari 2025</option>
+            </optgroup>
+            <optgroup label="── Ringkasan Tahunan ──">
+              <option value="avg">Rata-rata Kepesertaan 2025</option>
+              <option value="klaim">Akumulatif Klaim 2025</option>
+            </optgroup>
           </select>
         </div>
-        <div class="filter-row">
+        <div class="filter-row" id="filter-sort-row">
           <label for="sel-sort">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-            Urutkan:
+            Urutkan Terbanyak:
           </label>
-          <select id="sel-sort" onchange="renderProvTable();renderProvBarChart()">
+          <select id="sel-sort" onchange="renderProvTable()">
             <option value="total_tk">Total Tenaga Kerja</option>
             <option value="pu">PU Aktif</option>
             <option value="bpu">BPU Aktif</option>
@@ -532,6 +530,8 @@ tfoot td:first-child,tfoot td.left{text-align:left}
           </select>
         </div>
       </div>
+      <!-- Catatan metodologi — muncul dinamis -->
+      <div id="prov-mode-note" class="sumber-note" style="display:none;margin-top:8px"></div>
     </div>
     <div class="card-body no-pad">
       <div class="tbl-wrap"><table id="tbl-prov"></table></div>
@@ -1098,7 +1098,6 @@ function initTren(){
 // =============================================
 function initProvinsi(){
   renderProvTable();
-  renderProvBarChart();
 }
 
 function getProvData(bi){
@@ -1108,24 +1107,109 @@ function getProvData(bi){
   });
 }
 
-function renderProvBarChart(){
-  const bi=+document.getElementById('sel-bulan').value;
-  const data=getProvData(bi);
-  const top10=[...data].sort((a,b)=>b.total_tk_m-a.total_tk_m).slice(0,10);
-  document.getElementById('prov-bar-sub').textContent=MO_FULL[bi]+' 2025';
-  mkChart('chart-prov-bar',{type:'bar',data:{labels:top10.map(p=>p.prov),datasets:[{label:'Total TK',data:top10.map(p=>p.total_tk_m),backgroundColor:top10.map((_,i)=>i===0?CLR.oranye:i<3?CLR.teal:'rgba(30,58,95,.55)'),borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},callback:v=>fmtM(v)},grid:{color:'#f1f5f9'}},y:{ticks:{font:{size:10}},grid:{display:false}}}}});
-}
+
 
 function renderProvTable(){
-  const bi=+document.getElementById('sel-bulan').value;
+  const bulanVal=document.getElementById('sel-bulan').value;
   const sk=document.getElementById('sel-sort').value;
-  const sub=MO_FULL[bi]+' 2025';
-  document.getElementById('prov-tbl-sub').textContent=sub;
+  const noteEl=document.getElementById('prov-mode-note');
+  const sortSel=document.getElementById('sel-sort');
+  const subEl=document.getElementById('prov-tbl-sub');
+  const tbl=document.getElementById('tbl-prov');
+
+  // ── MODE: Rata-rata Kepesertaan 2025 ──
+  if(bulanVal==='avg'){
+    subEl.textContent='Rata-rata Bulanan 2025';
+    noteEl.style.display='block';
+    noteEl.textContent='📊 Angka merupakan rata-rata bulanan Januari–Desember 2025, bukan penjumlahan. Satu peserta yang aktif sepanjang tahun dihitung sebagai satu peserta, bukan dikalikan 12.';
+    // Update opsi sort ke mode kepesertaan
+    sortSel.innerHTML=`
+      <option value="total_tk">Total Tenaga Kerja</option>
+      <option value="pu">PU Aktif</option>
+      <option value="bpu">BPU Aktif</option>
+      <option value="jakon">Jasa Konstruksi</option>
+      <option value="perusahaan">Perusahaan</option>`;
+    // Hitung rata-rata per provinsi
+    let data=D.provinces_dec.map(p=>{
+      const vals=D.prov_monthly[p.prov]||[];
+      const avgTk=vals.length?Math.round(vals.reduce((s,v)=>s+v,0)/vals.length):p.total_tk;
+      return{...p,total_tk_m:avgTk,pu:Math.round(p.pu),bpu:Math.round(p.bpu),jakon:Math.round(p.jakon),perusahaan:p.perusahaan};
+    });
+    const skv=sortSel.value;
+    if(skv==='total_tk') data.sort((a,b)=>b.total_tk_m-a.total_tk_m);
+    else if(skv==='pu') data.sort((a,b)=>b.pu-a.pu);
+    else if(skv==='bpu') data.sort((a,b)=>b.bpu-a.bpu);
+    else if(skv==='jakon') data.sort((a,b)=>b.jakon-a.jakon);
+    else data.sort((a,b)=>b.perusahaan-a.perusahaan);
+    const tot=data.reduce((a,p)=>({pr:a.pr+p.perusahaan,pu:a.pu+p.pu,bpu:a.bpu+p.bpu,jk:a.jk+p.jakon,tk:a.tk+p.total_tk_m}),{pr:0,pu:0,bpu:0,jk:0,tk:0});
+    tbl.innerHTML=`<thead><tr>
+      <th class="left">No</th><th class="left">Provinsi</th>
+      <th>Perusahaan</th><th>PU Aktif</th><th>BPU Aktif</th><th>Jakon</th><th>Rata-rata TK</th>
+    </tr></thead><tbody>${data.map((p,i)=>`<tr>
+      <td class="left">${i+1}</td><td class="left">${p.prov}</td>
+      <td>${fmt(p.perusahaan)}</td><td>${fmt(p.pu)}</td><td>${fmt(p.bpu)}</td>
+      <td>${fmt(p.jakon)}</td><td class="fw-bold text-biru">${fmt(p.total_tk_m)}</td>
+    </tr>`).join('')}</tbody><tfoot><tr>
+      <td class="left" colspan="2">RATA-RATA NASIONAL</td>
+      <td>${fmt(Math.round(tot.pr/34))}</td><td>${fmt(Math.round(tot.pu/34))}</td>
+      <td>${fmt(Math.round(tot.bpu/34))}</td><td>${fmt(Math.round(tot.jk/34))}</td>
+      <td>${fmt(Math.round(tot.tk/34))}</td>
+    </tr></tfoot>`;
+    return;
+  }
+
+  // ── MODE: Akumulatif Klaim 2025 ──
+  if(bulanVal==='klaim'){
+    subEl.textContent='Akumulatif Klaim 2025';
+    noteEl.style.display='block';
+    noteEl.textContent='📈 Angka merupakan total kumulatif klaim Januari–Desember 2025. Satu peserta dapat mengajukan lebih dari satu klaim sehingga jumlah klaim tidak sama dengan jumlah individu.';
+    // Update opsi sort ke mode klaim
+    sortSel.innerHTML=`
+      <option value="klaim">Total Klaim</option>
+      <option value="nilai">Nilai Manfaat</option>`;
+    const skv=sortSel.value;
+    let data=[...D.provinces_dec];
+    if(skv==='nilai') data.sort((a,b)=>b.nilai-a.nilai);
+    else data.sort((a,b)=>b.klaim-a.klaim);
+    const totK=data.reduce((s,p)=>s+p.klaim,0);
+    const totN=data.reduce((s,p)=>s+p.nilai,0);
+    tbl.innerHTML=`<thead><tr>
+      <th class="left">No</th><th class="left">Provinsi</th>
+      <th>Total Klaim</th><th>Nilai Manfaat</th><th>% dari Nasional</th>
+    </tr></thead><tbody>${data.map((p,i)=>`<tr>
+      <td class="left">${i+1}</td><td class="left">${p.prov}</td>
+      <td class="fw-bold text-biru">${fmt(p.klaim)}</td>
+      <td>${fmtM(p.nilai)}</td>
+      <td style="color:var(--teal);font-weight:700">${(p.klaim/totK*100).toFixed(1)}%</td>
+    </tr>`).join('')}</tbody><tfoot><tr>
+      <td class="left" colspan="2">JUMLAH NASIONAL</td>
+      <td>${fmt(totK)}</td><td>${fmtM(totN)}</td><td>100%</td>
+    </tr></tfoot>`;
+    return;
+  }
+
+  // ── MODE: Bulan biasa ──
+  const bi=+bulanVal;
+  subEl.textContent=MO_FULL[bi]+' 2025';
+  noteEl.style.display='none';
+  // Reset opsi sort ke mode kepesertaan jika sebelumnya mode klaim
+  if(!sortSel.querySelector('option[value="total_tk"]')){
+    sortSel.innerHTML=`
+      <option value="total_tk">Total Tenaga Kerja</option>
+      <option value="pu">PU Aktif</option>
+      <option value="bpu">BPU Aktif</option>
+      <option value="jakon">Jasa Konstruksi</option>
+      <option value="perusahaan">Perusahaan</option>`;
+  }
+  const skv=document.getElementById('sel-sort').value;
   let data=getProvData(bi);
-  if(sk==='total_tk') data.sort((a,b)=>b.total_tk_m-a.total_tk_m);
-  else data.sort((a,b)=>b[sk]-a[sk]);
+  if(skv==='total_tk') data.sort((a,b)=>b.total_tk_m-a.total_tk_m);
+  else if(skv==='pu') data.sort((a,b)=>b.pu-a.pu);
+  else if(skv==='bpu') data.sort((a,b)=>b.bpu-a.bpu);
+  else if(skv==='jakon') data.sort((a,b)=>b.jakon-a.jakon);
+  else data.sort((a,b)=>b.perusahaan-a.perusahaan);
   const tot=data.reduce((a,p)=>({pr:a.pr+p.perusahaan,pu:a.pu+p.pu,bpu:a.bpu+p.bpu,jk:a.jk+p.jakon,tk:a.tk+p.total_tk_m}),{pr:0,pu:0,bpu:0,jk:0,tk:0});
-  document.getElementById('tbl-prov').innerHTML=`<thead><tr>
+  tbl.innerHTML=`<thead><tr>
     <th class="left">No</th><th class="left">Provinsi</th>
     <th>Perusahaan</th><th>PU Aktif</th><th>BPU Aktif</th><th>Jakon</th><th>Total TK</th>
   </tr></thead><tbody>${data.map((p,i)=>`<tr>
