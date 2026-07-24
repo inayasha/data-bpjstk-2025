@@ -64,21 +64,36 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f0ece
 /* ===== NAV ===== */
 .site-nav{
   background:var(--putih);border-bottom:1px solid var(--abu2);
-  overflow-x:auto;-webkit-overflow-scrolling:touch;
   position:sticky;top:0;z-index:100;
   box-shadow:0 2px 12px rgba(0,0,0,.08);
+  overflow-x:hidden;
 }
-.nav-inner{display:flex;max-width:1100px;margin:0 auto;min-width:max-content}
+.nav-inner{
+  display:flex;max-width:1100px;margin:0 auto;width:100%;
+}
 .nav-btn{
-  display:flex;align-items:center;gap:6px;padding:12px 16px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:12px 0;flex:1;min-width:0;
   font-size:13px;font-weight:600;color:var(--teks2);
   border:none;background:none;cursor:pointer;
   border-bottom:3px solid transparent;margin-bottom:-1px;
-  transition:var(--t);white-space:nowrap;
+  transition:all var(--t);white-space:nowrap;overflow:hidden;
 }
-.nav-btn svg{width:16px;height:16px;flex-shrink:0}
-.nav-btn.active{color:var(--biru);border-bottom-color:var(--oranye);background:var(--biru-bg)}
+.nav-btn svg{width:18px;height:18px;flex-shrink:0}
+.nav-label{display:none;overflow:hidden;text-overflow:ellipsis}
+.nav-btn.active{
+  color:var(--biru);border-bottom-color:var(--oranye);
+  background:var(--biru-bg);flex:2.5;
+}
+.nav-btn.active .nav-label{display:inline}
 .nav-btn:hover:not(.active){color:var(--biru);background:var(--biru-bg)}
+/* Desktop: selalu tampilkan semua label */
+@media(min-width:700px){
+  .nav-inner{min-width:max-content;width:auto}
+  .nav-btn{flex:none;padding:12px 16px}
+  .nav-label{display:inline}
+  .nav-btn.active{flex:none}
+}
 
 /* ===== LAYOUT ===== */
 .main{flex:1;max-width:1100px;margin:0 auto;width:100%;padding:16px}
@@ -321,27 +336,27 @@ tfoot td:first-child,tfoot td.left{text-align:left}
   <div class="nav-inner">
     <button class="nav-btn active" onclick="showTab('ringkasan',this)" aria-selected="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-      Ringkasan
+      <span class="nav-label">Ringkasan</span>
     </button>
     <button class="nav-btn" onclick="showTab('trend',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      Tren Kepesertaan Bulanan
+      <span class="nav-label">Tren Kepesertaan Bulanan</span>
     </button>
     <button class="nav-btn" onclick="showTab('provinsi',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      Per Provinsi
+      <span class="nav-label">Per Provinsi</span>
     </button>
     <button class="nav-btn" onclick="showTab('klaim',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      Klaim
+      <span class="nav-label">Klaim</span>
     </button>
     <button class="nav-btn" onclick="showTab('program',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
-      Detail Klaim per Program
+      <span class="nav-label">Detail Klaim per Program</span>
     </button>
     <button class="nav-btn" onclick="showTab('analisis',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
-      Analisis
+      <span class="nav-label">Analisis</span>
     </button>
   </div>
 </nav>
