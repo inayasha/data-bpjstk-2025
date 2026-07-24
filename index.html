@@ -692,6 +692,58 @@ tfoot td:first-child,tfoot td.left{text-align:left}
     Kepesertaan &amp; Klaim per Program
   </div>
 
+  <!-- Banner Total Klaim Nasional -->
+  <div id="banner-total-klaim" style="
+    background:linear-gradient(135deg,#0c1c30 0%,#1e3a5f 100%);
+    border-radius:var(--r);padding:16px 18px;margin-bottom:14px;
+    position:relative;overflow:hidden;
+  ">
+    <div style="position:absolute;right:-20px;top:-20px;width:100px;height:100px;
+      border-radius:50%;background:rgba(202,138,4,.12);pointer-events:none"></div>
+    <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.6);
+      letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px">
+      Total Klaim Kumulatif Nasional — Januari s.d. Desember 2025
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:baseline;margin-bottom:10px">
+      <div>
+        <div style="font-size:10px;color:rgba(255,255,255,.55);font-weight:600;margin-bottom:2px">TOTAL KLAIM KUMULATIF (JUMLAH KASUS)</div>
+        <div style="font-size:clamp(22px,5vw,32px);font-weight:900;color:#ffffff;
+          letter-spacing:-1px;line-height:1" id="banner-kasus">—</div>
+      </div>
+      <div style="width:1px;height:36px;background:rgba(255,255,255,.15);flex-shrink:0"></div>
+      <div>
+        <div style="font-size:10px;color:rgba(255,255,255,.55);font-weight:600;margin-bottom:2px">TOTAL NILAI MANFAAT</div>
+        <div style="font-size:clamp(22px,5vw,32px);font-weight:900;color:#f59e0b;
+          letter-spacing:-1px;line-height:1" id="banner-nilai">—</div>
+      </div>
+    </div>
+    <div style="font-size:10px;color:rgba(255,255,255,.5);line-height:1.5;margin-bottom:6px">
+      Sumber: Penjumlahan klaim 5 program BPJS Ketenagakerjaan
+      <span style="color:rgba(255,255,255,.75);font-weight:700"> JKK + JKM + JHT + JP + JKP</span>
+    </div>
+    <!-- Narasi penting -->
+    <div style="
+      background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);
+      border-radius:var(--r-xs);padding:10px 12px;margin-top:8px;
+      display:flex;gap:8px;align-items:flex-start;
+    ">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"
+        style="width:16px;height:16px;flex-shrink:0;margin-top:1px">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <div style="font-size:11px;color:rgba(255,255,255,.75);line-height:1.6">
+        <strong style="color:#f59e0b">Catatan penting:</strong>
+        Angka ini merupakan <strong style="color:rgba(255,255,255,.9)">jumlah kasus klaim</strong>,
+        bukan jumlah individu yang berbeda. Satu peserta dapat mengajukan klaim di lebih dari satu program —
+        misalnya, seorang pekerja yang mengalami kecelakaan kerja dapat mengajukan klaim
+        <strong style="color:rgba(255,255,255,.9)">JKK</strong> (untuk dirinya) sekaligus
+        <strong style="color:rgba(255,255,255,.9)">JKM</strong> (untuk ahli warisnya).
+        Persentase di bawah menunjukkan kontribusi setiap program terhadap total kasus klaim nasional.
+      </div>
+    </div>
+  </div>
+
   <!-- KPI 5 Program -->
   <div id="kpi-program" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px"></div>
 
@@ -1121,9 +1173,16 @@ function initProgram(){
   const progs=['JKK','JKM','JHT','JP','JKP'];
   const dec_idx=11, jan_idx=0;
 
+  // Isi banner total klaim nasional
+  const totalKlaimNas=progs.reduce((s,p)=>s+PROG[p].klaim[dec_idx],0);
+  const totalNilaiNas=progs.reduce((s,p)=>s+PROG[p].nilai[dec_idx],0);
+  const bannerKasus=document.getElementById('banner-kasus');
+  const bannerNilai=document.getElementById('banner-nilai');
+  if(bannerKasus) bannerKasus.textContent=fmt(totalKlaimNas);
+  if(bannerNilai) bannerNilai.textContent=fmtM(totalNilaiNas);
+
   // KPI cards per program
   const kpiEl=document.getElementById('kpi-program');
-  const totalKlaimNas=progs.reduce((s,p)=>s+PROG[p].klaim[dec_idx],0);
   kpiEl.innerHTML=progs.map(prog=>{
     const m=PROG_META[prog];
     const kDec=PROG[prog].klaim[dec_idx];
