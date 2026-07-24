@@ -705,12 +705,15 @@ tfoot td:first-child,tfoot td.left{text-align:left}
     </div>
     <div class="card">
       <div class="card-header">
-        <div class="card-title">Komparasi Segmen vs Angkatan Kerja</div>
-        <div class="card-sub">Coverage Rate berdasarkan data BPS Sakernas Agustus 2025</div>
+        <div class="card-title">Tingkat Kepesertaan vs Indikator BPS</div>
+        <div class="card-sub">Coverage rate berdasarkan data BPS Sakernas Agustus 2025</div>
       </div>
       <div class="card-body">
         <div class="chart-wrap"><canvas id="chart-coverage" height="220"></canvas></div>
-        <div class="sumber-note" style="margin-top:10px">Sumber pembanding: BPS Sakernas Agustus 2025 — Angkatan Kerja: <strong>154,00 juta</strong> · Penduduk Bekerja: <strong>146,54 juta</strong>. Rilis 5 November 2025.</div>
+        <div class="sumber-note" style="margin-top:10px">
+          <strong>Sumber BPS:</strong> Sakernas Agustus 2025 (rilis 5 November 2025) — Angkatan Kerja: <strong>154,00 juta</strong> · Penduduk Bekerja: <strong>146,54 juta</strong> · Pekerja Formal: <strong>61,85 juta</strong> (42,20% dari penduduk bekerja).<br>
+          <strong>Catatan metodologi:</strong> Kolom "PU Aktif vs Pekerja Formal BPS" menggunakan <strong>PU Aktif (27.406.731)</strong> — bukan total TK — karena segmen PU mencakup pekerja dengan hubungan kerja formal, setara dengan definisi Pekerja Formal BPS. Segmen BPU dan Jakon merupakan pekerja informal/mandiri yang tidak termasuk kategori Pekerja Formal BPS.
+        </div>
       </div>
     </div>
   </div>
@@ -1588,8 +1591,8 @@ function initAnalisis(){
 
   // KPI Cards
   buildBento('kpi-analisis',[
-    {label:'Coverage Rate vs Angkatan Kerja',val:cov_ak+'%',sub:'48,6 jt ÷ 154,0 jt (BPS Ags 2025)',cls:'',icon:'workers'},
-    {label:'Coverage Rate vs Penduduk Bekerja',val:cov_pb+'%',sub:'48,6 jt ÷ 146,5 jt (BPS Ags 2025)',cls:'teal',icon:'pu'},
+    {label:'Coverage Rate vs Angkatan Kerja',val:cov_ak+'%',sub:'Total TK 48,6 jt ÷ AK 154,0 jt (BPS Ags 2025)',cls:'',icon:'workers'},
+    {label:'Coverage Rate vs Penduduk Bekerja',val:cov_pb+'%',sub:'Total TK 48,6 jt ÷ Pddk Bekerja 146,5 jt (BPS Ags 2025)',cls:'teal',icon:'pu'},
     {label:'Claim Rate Nasional',val:claimRateNas+'%',sub:'Klaim kum. ÷ total TK aktif',cls:'orange',icon:'doc'},
     {label:'Konsentrasi 5 Provinsi Teratas',val:konsPct+'%',sub:'dari total nasional Des 2025',cls:'amber',icon:'building'},
   ]);
@@ -1732,7 +1735,7 @@ function initAnalisis(){
   // Detail tabel konsentrasi
   document.getElementById('konsentrasi-detail').innerHTML=`
     <div class="tbl-wrap"><table style="min-width:auto">
-      <thead><tr><th class="left" style="font-size:11px">Provinsi</th><th style="font-size:11px">Total TK</th><th style="font-size:11px">% Nasional</th></tr></thead>
+      <thead><tr><th class="left" style="font-size:11px">Provinsi</th><th style="font-size:11px">Total TK</th><th style="font-size:11px">% dari Total Nasional 2025</th></tr></thead>
       <tbody>${top5sorted.map((p,i)=>`<tr>
         <td class="left" style="font-size:12px">${i+1}. ${p.prov}</td>
         <td style="font-size:12px">${fmt(p.total_tk)}</td>
@@ -1746,22 +1749,47 @@ function initAnalisis(){
     </table></div>`;
 
   // === CHART 6: COVERAGE RATE ===
+  // Pekerja Formal BPS Agustus 2024 = 60,81 juta
+  // Kolom ketiga menggunakan PU Aktif (bukan total TK)
+  // karena PU = pekerja formal/hubungan kerja, setara definisi BPS
+  const PEKERJA_FORMAL_BPS = 61850000; // BPS Sakernas Agustus 2025
+  const puAktifDec = dec.pu_aktif; // 27.406.731
+  const covFormal  = (puAktifDec / PEKERJA_FORMAL_BPS * 100).toFixed(1);
+
   mkChart('chart-coverage',{type:'bar',data:{
-    labels:['BPJS TK vs\nAngkatan Kerja','BPJS TK vs\nPenduduk Bekerja','Pekerja\nFormal (2024)'],
+    labels:[
+      'Total BPJS TK vs\nAngkatan Kerja',
+      'Total BPJS TK vs\nPenduduk Bekerja',
+      'PU Aktif vs\nPekerja Formal BPS'
+    ],
     datasets:[
-      {label:'Coverage (%)',data:[parseFloat(cov_ak),parseFloat(cov_pb),(totalTK/60810000*100).toFixed(1)],
+      {label:'Coverage (%)',
+       data:[parseFloat(cov_ak),parseFloat(cov_pb),parseFloat(covFormal)],
        backgroundColor:[CLR.biru,CLR.teal,CLR.oranye],borderRadius:6},
       {label:'Target 100%',data:[100,100,100],
-       type:'line',borderColor:'rgba(0,0,0,.15)',borderDash:[4,3],borderWidth:1,pointRadius:0,fill:false},
+       type:'line',borderColor:'rgba(0,0,0,.15)',borderDash:[4,3],
+       borderWidth:1,pointRadius:0,fill:false},
     ]
   },options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},
-      tooltip:{callbacks:{label:c=>` ${c.parsed.y}%`}}
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{
+        label:c=>{
+          const descs=[
+            `Total TK ${fmt(totalTK)} ÷ AK ${fmt(AK_BPS)}`,
+            `Total TK ${fmt(totalTK)} ÷ Pddk Bekerja ${fmt(PB_BPS)}`,
+            `PU Aktif ${fmt(puAktifDec)} ÷ Pekerja Formal ${fmt(PEKERJA_FORMAL_BPS)}`
+          ];
+          return [` ${c.parsed.y}%`, descs[c.dataIndex]||''];
+        }
+      }}
     },
     scales:{
       x:{ticks:{font:{size:10}},grid:{display:false}},
-      y:{min:0,max:100,ticks:{font:{size:10},callback:v=>v+'%'},grid:{color:'#e7e3da'},
-        title:{display:true,text:'Coverage (%)',font:{size:10}}}
+      y:{min:0,max:100,
+         ticks:{font:{size:10},callback:v=>v+'%'},
+         grid:{color:'#e7e3da'},
+         title:{display:true,text:'Coverage (%)',font:{size:10}}}
     }
   }});
 }
