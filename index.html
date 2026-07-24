@@ -50,14 +50,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f0ece
 .header-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap}
 .header-title{flex:1;min-width:0}
 .header-title h1{font-size:clamp(14px,3.5vw,22px);font-weight:800;line-height:1.25;letter-spacing:-.2px}
-.header-title p{font-size:11px;opacity:.7;margin-top:4px;font-weight:500}
+.header-title p{font-size:12px;opacity:.75;margin-top:4px;font-weight:500}
 .header-stat{
   background:rgba(255,255,255,.13);
   border:1px solid rgba(255,255,255,.22);
   border-radius:var(--r-sm);padding:8px 12px;text-align:right;white-space:nowrap;flex-shrink:0;
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
 }
-.header-stat .st-label{font-size:8px;font-weight:700;opacity:.7;letter-spacing:.8px;text-transform:uppercase}
+.header-stat .st-label{font-size:10px;font-weight:700;opacity:.7;letter-spacing:.6px;text-transform:uppercase}
 .header-stat .st-val{font-size:clamp(16px,4vw,22px);font-weight:900;line-height:1.15;letter-spacing:-.5px}
 .header-stat .st-sub{font-size:10px;opacity:.6;margin-top:1px}
 
@@ -147,9 +147,9 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f0ece
 
 .kpi-icon{position:absolute;top:12px;right:12px;opacity:.1;width:36px;height:36px;color:var(--teks)}
 .kpi-card.hero .kpi-icon{color:var(--putih)}
-.kpi-label{font-size:10px;font-weight:700;color:var(--teks2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.kpi-label{font-size:11px;font-weight:700;color:var(--teks2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
 .kpi-val{font-size:clamp(20px,4vw,28px);font-weight:900;color:var(--teks);line-height:1.05;letter-spacing:-.5px}
-.kpi-sub{font-size:11px;color:var(--teks2);margin-top:4px}
+.kpi-sub{font-size:12px;color:var(--teks2);margin-top:4px}
 .kpi-badge{
   display:inline-flex;align-items:center;gap:3px;
   font-size:11px;font-weight:700;padding:3px 8px;
@@ -168,8 +168,8 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#f0ece
   padding:14px 16px 11px;border-bottom:1px solid var(--abu2);
   display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;
 }
-.card-title{font-size:13px;font-weight:700;color:var(--teks)}
-.card-sub{font-size:11px;color:var(--teks2);margin-top:2px}
+.card-title{font-size:14px;font-weight:700;color:var(--teks)}
+.card-sub{font-size:12px;color:var(--teks2);margin-top:2px}
 .card-body{padding:14px}
 .card-body.no-pad{padding:0}
 
@@ -192,15 +192,15 @@ canvas{width:100%!important}
 table{width:100%;border-collapse:collapse;font-size:12px;min-width:480px}
 thead th{
   background:#122440;color:var(--putih);
-  padding:9px 8px;text-align:right;font-weight:700;font-size:11px;
+  padding:9px 8px;text-align:right;font-weight:700;font-size:12px;
   white-space:nowrap;position:sticky;top:0;z-index:2;
 }
 thead th:first-child,thead th.left{text-align:left}
 tbody tr:nth-child(even){background:var(--abu)}
 tbody tr:hover{background:var(--biru-bg);transition:background var(--t)}
-tbody td{padding:7px 8px;border-bottom:1px solid var(--abu2);white-space:nowrap;text-align:right;font-size:12px}
+tbody td{padding:7px 8px;border-bottom:1px solid var(--abu2);white-space:nowrap;text-align:right;font-size:13px}
 tbody td:first-child,tbody td.left{text-align:left;font-weight:600}
-tfoot td{background:#122440;color:var(--putih);padding:8px;font-weight:700;text-align:right;font-size:12px}
+tfoot td{background:#122440;color:var(--putih);padding:8px;font-weight:700;text-align:right;font-size:13px}
 tfoot td:first-child,tfoot td.left{text-align:left}
 
 /* ===== RANK LIST ===== */
@@ -216,16 +216,16 @@ tfoot td:first-child,tfoot td.left{text-align:left}
 .rank-no.r3{background:var(--biru);color:var(--putih)}
 .rank-no.rn{background:var(--abu2);color:var(--teks2)}
 .rank-bar-wrap{flex:1;min-width:0}
-.rank-label{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.rank-label{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
 .rank-bg{background:var(--abu2);border-radius:4px;height:6px}
 .rank-fill{height:6px;border-radius:4px;background:var(--biru);transition:width .6s ease}
 .rank-fill.gold{background:var(--oranye)}
-.rank-val{font-size:11px;font-weight:700;color:var(--teks);white-space:nowrap;min-width:72px;text-align:right;flex-shrink:0}
+.rank-val{font-size:12px;font-weight:700;color:var(--teks);white-space:nowrap;min-width:72px;text-align:right;flex-shrink:0}
 
 /* ===== FILTER BAR — mobile per baris ===== */
 .filter-bar{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
 .filter-row{display:flex;align-items:center;gap:8px}
-.filter-bar label{font-size:11px;font-weight:700;color:var(--teks2);white-space:nowrap;display:flex;align-items:center;gap:4px}
+.filter-bar label{font-size:12px;font-weight:700;color:var(--teks2);white-space:nowrap;display:flex;align-items:center;gap:4px}
 .filter-bar select{
   flex:1;padding:8px 12px;border:1px solid var(--border);
   border-radius:var(--r-xs);font-size:12px;color:var(--teks);
@@ -236,7 +236,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
 
 /* ===== LEGEND ===== */
 .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--teks2)}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--teks2)}
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 
 /* ===== SECTION TITLE ===== */
@@ -246,12 +246,12 @@ tfoot td:first-child,tfoot td.left{text-align:left}
   border-bottom:2px solid var(--abu2);
   display:flex;align-items:center;gap:8px;
 }
-.section-title svg{width:18px;height:18px;flex-shrink:0;color:var(--oranye)}
+.section-title svg{width:20px;height:20px;flex-shrink:0;color:var(--oranye)}
 
 /* ===== FOOTER ===== */
 .site-footer{
-  background:#0c1c30;color:rgba(255,255,255,.6);
-  font-size:11px;text-align:center;padding:16px;line-height:1.7;
+  background:#0c1c30;color:rgba(255,255,255,.65);
+  font-size:12px;text-align:center;padding:16px 20px;line-height:1.8;
   margin-top:auto;
 }
 .site-footer strong{color:var(--putih)}
@@ -263,27 +263,27 @@ tfoot td:first-child,tfoot td.left{text-align:left}
 /* ===== ANALISIS TAB ===== */
 .insight-box{background:linear-gradient(135deg,#0c1c30 0%,#1e3a5f 100%);color:var(--putih);border-radius:var(--r);padding:16px;margin-bottom:14px;position:relative;overflow:hidden}
 .insight-box::before{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(202,138,4,.15)}
-.insight-box .ib-label{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;opacity:.7;margin-bottom:6px}
+.insight-box .ib-label{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;opacity:.7;margin-bottom:6px}
 .insight-box .ib-val{font-size:clamp(26px,6vw,38px);font-weight:900;letter-spacing:-1px;line-height:1}
-.insight-box .ib-sub{font-size:11px;opacity:.65;margin-top:5px}
-.insight-box .ib-note{font-size:10px;opacity:.5;margin-top:8px;font-style:italic}
+.insight-box .ib-sub{font-size:12px;opacity:.65;margin-top:5px}
+.insight-box .ib-note{font-size:11px;opacity:.5;margin-top:8px;font-style:italic}
 .insight-box.gold{background:linear-gradient(135deg,#78350f 0%,#ca8a04 100%)}
 .insight-box.teal{background:linear-gradient(135deg,#0c3040 0%,#0d7490 100%)}
 .insight-box.amber{background:linear-gradient(135deg,#431407 0%,#b45309 100%)}
-.anomali-box{background:var(--oranye-bg);border:2px solid var(--oranye);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px}
-.anomali-icon{width:36px;height:36px;background:var(--oranye);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.anomali-box{background:var(--oranye-bg);border:2px solid var(--oranye);border-radius:var(--r);padding:16px 18px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px}
+.anomali-icon{width:38px;height:38px;background:var(--oranye);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .anomali-icon svg{width:18px;height:18px;color:white}
-.anomali-title{font-size:13px;font-weight:800;color:var(--oranye);margin-bottom:3px}
-.anomali-body{font-size:12px;color:var(--teks2);line-height:1.6}
+.anomali-title{font-size:14px;font-weight:800;color:var(--oranye);margin-bottom:5px}
+.anomali-body{font-size:13px;color:var(--teks2);line-height:1.7}
 .kuadran-wrap{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;border-radius:var(--r-sm);overflow:hidden;margin-top:8px}
-.kuadran{padding:8px;text-align:center;font-size:10px;font-weight:700;line-height:1.4}
+.kuadran{padding:9px;text-align:center;font-size:11px;font-weight:700;line-height:1.5}
 .kuadran.q1{background:#dbeafe;color:#1e3a5f}
 .kuadran.q2{background:#ccfbf1;color:#0d7490}
 .kuadran.q3{background:#fef9c3;color:#854d0e}
 .kuadran.q4{background:#fee2e2;color:#7f1d1d}
 .ref-line-label{font-size:10px;color:var(--teks2);margin-top:6px;display:flex;align-items:center;gap:5px}
 .ref-line-bar{width:24px;height:2px;background:var(--oranye);border-top:2px dashed var(--oranye)}
-.sumber-note{font-size:10px;color:var(--teks3);padding:8px 12px;background:var(--abu);border-radius:var(--r-xs);margin-top:6px;line-height:1.5}
+.sumber-note{font-size:11px;color:var(--teks3);padding:10px 13px;background:var(--abu);border-radius:var(--r-xs);margin-top:8px;line-height:1.7}
 </style>
 </head>
 <body>
@@ -504,7 +504,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
         </div>
       </div>
       <div class="card-body">
-        <label for="sel-prov" style="display:block;font-size:11px;font-weight:700;color:var(--teks2);margin-bottom:5px">Pilih provinsi:</label>
+        <label for="sel-prov" style="display:block;font-size:12px;font-weight:700;color:var(--teks2);margin-bottom:5px">Pilih provinsi:</label>
         <select id="sel-prov" onchange="renderProvTrend()" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--r-xs);font-size:12px;margin-bottom:12px"></select>
         <div class="chart-wrap"><canvas id="chart-prov-trend" height="190"></canvas></div>
       </div>
@@ -618,10 +618,10 @@ tfoot td:first-child,tfoot td.left{text-align:left}
     </div>
     <div class="card-body">
       <div class="kuadran-wrap">
-        <div class="kuadran q1">↗ Besar &amp; Tumbuh<br><span style="font-weight:400;font-size:9px">Prioritas pertahankan</span></div>
-        <div class="kuadran q2">↗ Kecil &amp; Tumbuh Cepat<br><span style="font-weight:400;font-size:9px">Potensi tinggi</span></div>
-        <div class="kuadran q3">↘ Besar &amp; Stagnan<br><span style="font-weight:400;font-size:9px">Perlu perhatian</span></div>
-        <div class="kuadran q4">↘ Kecil &amp; Turun<br><span style="font-weight:400;font-size:9px">Intervensi mendesak</span></div>
+        <div class="kuadran q1">↗ Besar &amp; Tumbuh<br><span style="font-weight:400;font-size:10px">Prioritas pertahankan</span></div>
+        <div class="kuadran q2">↗ Kecil &amp; Tumbuh Cepat<br><span style="font-weight:400;font-size:10px">Potensi tinggi</span></div>
+        <div class="kuadran q3">↘ Besar &amp; Stagnan<br><span style="font-weight:400;font-size:10px">Perlu perhatian</span></div>
+        <div class="kuadran q4">↘ Kecil &amp; Turun<br><span style="font-weight:400;font-size:10px">Intervensi mendesak</span></div>
       </div>
       <div class="chart-wrap" style="margin-top:12px"><canvas id="chart-scatter" height="300"></canvas></div>
       <div class="sumber-note">Garis referensi rata-rata nasional: pertumbuhan TK = +14,0% · median ukuran provinsi = sekitar 650.000 TK</div>
@@ -700,24 +700,24 @@ tfoot td:first-child,tfoot td.left{text-align:left}
   ">
     <div style="position:absolute;right:-20px;top:-20px;width:100px;height:100px;
       border-radius:50%;background:rgba(202,138,4,.12);pointer-events:none"></div>
-    <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.6);
-      letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px">
+    <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.65);
+      letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">
       Total Klaim Kumulatif Nasional — Januari s.d. Desember 2025
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:baseline;margin-bottom:10px">
       <div>
-        <div style="font-size:10px;color:rgba(255,255,255,.55);font-weight:600;margin-bottom:2px">TOTAL KLAIM KUMULATIF (JUMLAH KASUS)</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:2px">TOTAL KLAIM KUMULATIF (JUMLAH KASUS)</div>
         <div style="font-size:clamp(22px,5vw,32px);font-weight:900;color:#ffffff;
           letter-spacing:-1px;line-height:1" id="banner-kasus">—</div>
       </div>
       <div style="width:1px;height:36px;background:rgba(255,255,255,.15);flex-shrink:0"></div>
       <div>
-        <div style="font-size:10px;color:rgba(255,255,255,.55);font-weight:600;margin-bottom:2px">TOTAL NILAI MANFAAT</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.6);font-weight:700;margin-bottom:2px">TOTAL NILAI MANFAAT</div>
         <div style="font-size:clamp(22px,5vw,32px);font-weight:900;color:#f59e0b;
           letter-spacing:-1px;line-height:1" id="banner-nilai">—</div>
       </div>
     </div>
-    <div style="font-size:10px;color:rgba(255,255,255,.5);line-height:1.5;margin-bottom:6px">
+    <div style="font-size:11px;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:6px">
       Sumber: Penjumlahan klaim 5 program BPJS Ketenagakerjaan
       <span style="color:rgba(255,255,255,.75);font-weight:700"> JKK + JKM + JHT + JP + JKP</span>
     </div>
@@ -732,7 +732,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
         <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
         <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
       </svg>
-      <div style="font-size:11px;color:rgba(255,255,255,.75);line-height:1.6">
+      <div style="font-size:13px;color:rgba(255,255,255,.8);line-height:1.7">
         <strong style="color:#f59e0b">Catatan penting:</strong>
         Angka ini merupakan <strong style="color:rgba(255,255,255,.9)">jumlah kasus klaim</strong>,
         bukan jumlah individu yang berbeda. Satu peserta dapat mengajukan klaim di lebih dari satu program —
@@ -762,7 +762,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
       </div>
       <!-- Selector metrik -->
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
-        <label style="font-size:11px;font-weight:700;color:var(--teks2)">Tampilkan:</label>
+        <label style="font-size:12px;font-weight:700;color:var(--teks2)">Tampilkan:</label>
         <select id="seg-metric" onchange="renderSegmenCharts()" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--r-xs);font-size:12px">
           <option value="peserta">Peserta Aktif</option>
           <option value="klaim">Klaim Kumulatif</option>
@@ -774,14 +774,14 @@ tfoot td:first-child,tfoot td.left{text-align:left}
       <!-- Charts per segmen -->
       <div class="grid-half">
         <div>
-          <div style="font-size:11px;font-weight:700;color:var(--biru);margin-bottom:6px">
+          <div style="font-size:12px;font-weight:700;color:var(--biru);margin-bottom:6px">
             <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--biru);margin-right:4px"></span>
             Penerima Upah (PU)
           </div>
           <div class="chart-wrap"><canvas id="chart-seg-pu" height="180"></canvas></div>
         </div>
         <div>
-          <div style="font-size:11px;font-weight:700;color:var(--oranye);margin-bottom:6px">
+          <div style="font-size:12px;font-weight:700;color:var(--oranye);margin-bottom:6px">
             <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--oranye);margin-right:4px"></span>
             Bukan Penerima Upah (BPU)
           </div>
@@ -789,7 +789,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
         </div>
       </div>
       <div style="margin-top:14px">
-        <div style="font-size:11px;font-weight:700;color:var(--teal);margin-bottom:6px">
+        <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:6px">
           <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--teal);margin-right:4px"></span>
           Jasa Konstruksi (Jakon)
         </div>
@@ -868,7 +868,7 @@ tfoot td:first-child,tfoot td.left{text-align:left}
 </main>
 
 <footer class="site-footer">
-  <strong>Sumber:</strong> BPJS Ketenagakerjaan, diolah oleh Mediator HI Ahli Muda – Tommy, S.Kom., M.M. – Direktorat Jaminan Sosial Tenaga Kerja dan Fasilitasi Kesejahteraan Pekerja
+  <strong>Sumber:</strong> BPJS Ketenagakerjaan, diolah oleh Mediator HI Ahli Muda – Tommy, S.Kom., M.M. – Direktorat Jaminan Sosial Tenaga Kerja dan Fasilitasi Kesejahteraan Pekerja, Direktorat Jenderal PHI dan Jamsos – Kemnaker RI
 </footer>
 
 <script>
@@ -961,7 +961,7 @@ function buildBento(containerId, items){
       <div class="kpi-label">${k.label}</div>
       <div class="kpi-val">${k.val}</div>
       <div class="kpi-sub">${k.sub}</div>
-      ${k.badge!=null?`<span class="kpi-badge ${isUp(k.badge)?'up':'dn'}">${k.badge} vs Jan</span>`:''}
+      ${k.badge!=null?`<span class="kpi-badge ${isUp(k.badge)?'up':'dn'}">${k.badge} vs Jan 2025</span>`:''}
     </div>`;
   }).join('');
 }
@@ -1192,11 +1192,11 @@ function initProgram(){
     const sharePct=(kDec/totalKlaimNas*100).toFixed(1);
     return`<div class="kpi-card" style="border-top:3px solid ${m.color};border-left:none">
       <div class="kpi-label" style="color:${m.color}">${prog} — ${m.name}</div>
-      <div style="font-size:9px;color:var(--teks3);margin-bottom:6px">${m.peserta}</div>
+      <div style="font-size:10px;color:var(--teks3);margin-bottom:6px">${m.peserta}</div>
       <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <div><div style="font-size:9px;color:var(--teks2);font-weight:700">PESERTA AKTIF</div><div style="font-size:16px;font-weight:800">${fmt(tkDec)}</div></div>
-        <div><div style="font-size:9px;color:var(--teks2);font-weight:700">KLAIM KUM.</div><div style="font-size:16px;font-weight:800">${fmt(kDec)}</div></div>
-        <div><div style="font-size:9px;color:var(--teks2);font-weight:700">NILAI KUM.</div><div style="font-size:16px;font-weight:800">${fmtM(nDec)}</div></div>
+        <div><div style="font-size:10px;color:var(--teks2);font-weight:700">PESERTA AKTIF</div><div style="font-size:16px;font-weight:800">${fmt(tkDec)}</div></div>
+        <div><div style="font-size:10px;color:var(--teks2);font-weight:700">KLAIM KUM.</div><div style="font-size:16px;font-weight:800">${fmt(kDec)}</div></div>
+        <div><div style="font-size:10px;color:var(--teks2);font-weight:700">NILAI KUM.</div><div style="font-size:16px;font-weight:800">${fmtM(nDec)}</div></div>
       </div>
       <span class="kpi-badge" style="margin-top:6px;background:rgba(30,58,95,.1);color:var(--biru)">${sharePct}% dari total klaim nasional</span>
     </div>`;
@@ -1213,8 +1213,8 @@ function initProgram(){
     const growth=((kDec-kJan)/kJan*100);
     return`<tr>
       <td class="left"><span style="font-weight:800;color:${m.color}">${prog}</span></td>
-      <td class="left" style="font-size:11px">${m.name}</td>
-      <td class="left" style="font-size:10px;color:var(--teks2)">${m.peserta}</td>
+      <td class="left" style="font-size:12px">${m.name}</td>
+      <td class="left" style="font-size:11px;color:var(--teks2)">${m.peserta}</td>
       <td>${fmt(tkDec)}</td>
       <td class="fw-bold text-biru">${fmt(kDec)}</td>
       <td>${fmtM(nDec)}</td>
@@ -1319,7 +1319,7 @@ function initProgram(){
   if(sel){
     sel.innerHTML=progs.map(p=>`
       <button onclick="setActiveProg('${p}')" id="btn-prog-${p}"
-        style="padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;
+        style="padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;
         border:2px solid ${PROG_META[p].color};
         background:${'JKK'===p?PROG_META[p].color:'transparent'};
         color:${'JKK'===p?'#fff':PROG_META[p].color};
@@ -1608,16 +1608,16 @@ function initAnalisis(){
   // Detail tabel konsentrasi
   document.getElementById('konsentrasi-detail').innerHTML=`
     <div class="tbl-wrap"><table style="min-width:auto">
-      <thead><tr><th class="left" style="font-size:10px">Provinsi</th><th style="font-size:10px">Total TK</th><th style="font-size:10px">% Nasional</th></tr></thead>
+      <thead><tr><th class="left" style="font-size:11px">Provinsi</th><th style="font-size:11px">Total TK</th><th style="font-size:11px">% Nasional</th></tr></thead>
       <tbody>${top5sorted.map((p,i)=>`<tr>
-        <td class="left" style="font-size:11px">${i+1}. ${p.prov}</td>
-        <td style="font-size:11px">${fmt(p.total_tk)}</td>
-        <td style="font-size:11px;font-weight:700;color:var(--biru)">${(p.total_tk/totalTK*100).toFixed(1)}%</td>
+        <td class="left" style="font-size:12px">${i+1}. ${p.prov}</td>
+        <td style="font-size:12px">${fmt(p.total_tk)}</td>
+        <td style="font-size:12px;font-weight:700;color:var(--biru)">${(p.total_tk/totalTK*100).toFixed(1)}%</td>
       </tr>`).join('')}
       <tr style="background:var(--abu)">
-        <td class="left" style="font-size:11px;font-weight:700">29 Provinsi Lainnya</td>
-        <td style="font-size:11px;font-weight:700">${fmt(others)}</td>
-        <td style="font-size:11px;font-weight:700;color:var(--teks2)">${(others/totalTK*100).toFixed(1)}%</td>
+        <td class="left" style="font-size:12px;font-weight:700">29 Provinsi Lainnya</td>
+        <td style="font-size:12px;font-weight:700">${fmt(others)}</td>
+        <td style="font-size:12px;font-weight:700;color:var(--teks2)">${(others/totalTK*100).toFixed(1)}%</td>
       </tr></tbody>
     </table></div>`;
 
