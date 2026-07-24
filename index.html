@@ -192,10 +192,17 @@ canvas{width:100%!important}
 table{width:100%;border-collapse:collapse;font-size:12px;min-width:480px}
 thead th{
   background:#122440;color:var(--putih);
-  padding:9px 8px;text-align:right;font-weight:700;font-size:12px;
+  padding:9px 10px;text-align:right;font-weight:700;font-size:12px;
   white-space:nowrap;position:sticky;top:0;z-index:2;
+  user-select:none;
 }
 thead th:first-child,thead th.left{text-align:left}
+thead th.sortable{cursor:pointer;transition:background var(--t)}
+thead th.sortable:hover{background:#1e3a5f}
+thead th.sort-active{background:#1e3a5f;color:#ffffff;text-decoration:underline;text-underline-offset:3px}
+thead th.sort-active .sort-icon{color:#ffffff;opacity:1}
+.sort-icon{display:inline-block;margin-left:4px;font-size:10px;opacity:.45}
+thead th.sort-active .sort-icon{opacity:1}
 tbody tr:nth-child(even){background:var(--abu)}
 tbody tr:hover{background:var(--biru-bg);transition:background var(--t)}
 tbody td{padding:7px 8px;border-bottom:1px solid var(--abu2);white-space:nowrap;text-align:right;font-size:13px}
@@ -516,22 +523,10 @@ tfoot td:first-child,tfoot td.left{text-align:left}
             </optgroup>
           </select>
         </div>
-        <div class="filter-row" id="filter-sort-row">
-          <label for="sel-sort">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-            Urutkan Terbanyak:
-          </label>
-          <select id="sel-sort" onchange="renderProvTable()">
-            <option value="total_tk">Total Tenaga Kerja</option>
-            <option value="pu">PU Aktif</option>
-            <option value="bpu">BPU Aktif</option>
-            <option value="jakon">Jasa Konstruksi</option>
-            <option value="perusahaan">Perusahaan</option>
-          </select>
-        </div>
+
       </div>
       <!-- Catatan metodologi — muncul dinamis -->
-      <div id="prov-mode-note" class="sumber-note" style="display:none;margin-top:8px"></div>
+      <div id="prov-mode-note" style="display:none;margin-top:8px;font-size:13px;color:var(--teks2);padding:11px 14px;background:var(--abu);border-radius:var(--r-xs);line-height:1.7;border-left:3px solid var(--oranye)"></div>
     </div>
     <div class="card-body no-pad">
       <div class="tbl-wrap"><table id="tbl-prov"></table></div>
@@ -1109,11 +1104,38 @@ function getProvData(bi){
 
 
 
+// State sort tabel provinsi
+let _provSort='total_tk', _provDir='desc';
+
+function sortProvBy(key){
+  if(_provSort===key) _provDir=_provDir==='desc'?'asc':'desc';
+  else{_provSort=key;_provDir='desc';}
+  renderProvTable();
+}
+
+function sortIcon(key){
+  if(_provSort!==key) return '<span class="sort-icon">⇅</span>';
+  return _provDir==='desc'
+    ? '<span class="sort-icon">▼</span>'
+    : '<span class="sort-icon">▲</span>';
+}
+
+function thSort(key,label,leftAlign=false){
+  const active=_provSort===key?' sort-active':'';
+  const align=leftAlign?'left':'';
+  return `<th class="sortable${active}${align?' '+align:''}" onclick="sortProvBy('${key}')">${label}${sortIcon(key)}</th>`;
+}
+
+function applySortProv(data, key){
+  return data.sort((a,b)=>{
+    const av=a[key]??0, bv=b[key]??0;
+    return _provDir==='desc'?bv-av:av-bv;
+  });
+}
+
 function renderProvTable(){
   const bulanVal=document.getElementById('sel-bulan').value;
-  const sk=document.getElementById('sel-sort').value;
   const noteEl=document.getElementById('prov-mode-note');
-  const sortSel=document.getElementById('sel-sort');
   const subEl=document.getElementById('prov-tbl-sub');
   const tbl=document.getElementById('tbl-prov');
 
@@ -1121,30 +1143,20 @@ function renderProvTable(){
   if(bulanVal==='avg'){
     subEl.textContent='Rata-rata Bulanan 2025';
     noteEl.style.display='block';
-    noteEl.textContent='📊 Angka merupakan rata-rata bulanan Januari–Desember 2025, bukan penjumlahan. Satu peserta yang aktif sepanjang tahun dihitung sebagai satu peserta, bukan dikalikan 12.';
-    // Update opsi sort ke mode kepesertaan
-    sortSel.innerHTML=`
-      <option value="total_tk">Total Tenaga Kerja</option>
-      <option value="pu">PU Aktif</option>
-      <option value="bpu">BPU Aktif</option>
-      <option value="jakon">Jasa Konstruksi</option>
-      <option value="perusahaan">Perusahaan</option>`;
-    // Hitung rata-rata per provinsi
+    noteEl.textContent='📊 Angka merupakan rata-rata bulanan Januari–Desember 2025, bukan penjumlahan. Satu peserta yang aktif sepanjang tahun dihitung sebagai satu peserta, bukan dikalikan 12. Klik header kolom untuk mengurutkan.';
+    if(!['perusahaan','pu','bpu','jakon','total_tk_m'].includes(_provSort)) _provSort='total_tk_m';
     let data=D.provinces_dec.map(p=>{
       const vals=D.prov_monthly[p.prov]||[];
       const avgTk=vals.length?Math.round(vals.reduce((s,v)=>s+v,0)/vals.length):p.total_tk;
-      return{...p,total_tk_m:avgTk,pu:Math.round(p.pu),bpu:Math.round(p.bpu),jakon:Math.round(p.jakon),perusahaan:p.perusahaan};
+      return{...p,total_tk_m:avgTk};
     });
-    const skv=sortSel.value;
-    if(skv==='total_tk') data.sort((a,b)=>b.total_tk_m-a.total_tk_m);
-    else if(skv==='pu') data.sort((a,b)=>b.pu-a.pu);
-    else if(skv==='bpu') data.sort((a,b)=>b.bpu-a.bpu);
-    else if(skv==='jakon') data.sort((a,b)=>b.jakon-a.jakon);
-    else data.sort((a,b)=>b.perusahaan-a.perusahaan);
+    data=applySortProv(data,_provSort);
     const tot=data.reduce((a,p)=>({pr:a.pr+p.perusahaan,pu:a.pu+p.pu,bpu:a.bpu+p.bpu,jk:a.jk+p.jakon,tk:a.tk+p.total_tk_m}),{pr:0,pu:0,bpu:0,jk:0,tk:0});
     tbl.innerHTML=`<thead><tr>
       <th class="left">No</th><th class="left">Provinsi</th>
-      <th>Perusahaan</th><th>PU Aktif</th><th>BPU Aktif</th><th>Jakon</th><th>Rata-rata TK</th>
+      ${thSort('perusahaan','Perusahaan')}${thSort('pu','PU Aktif')}
+      ${thSort('bpu','BPU Aktif')}${thSort('jakon','Jakon')}
+      ${thSort('total_tk_m','Rata-rata TK')}
     </tr></thead><tbody>${data.map((p,i)=>`<tr>
       <td class="left">${i+1}</td><td class="left">${p.prov}</td>
       <td>${fmt(p.perusahaan)}</td><td>${fmt(p.pu)}</td><td>${fmt(p.bpu)}</td>
@@ -1162,20 +1174,15 @@ function renderProvTable(){
   if(bulanVal==='klaim'){
     subEl.textContent='Akumulatif Klaim 2025';
     noteEl.style.display='block';
-    noteEl.textContent='📈 Angka merupakan total kumulatif klaim Januari–Desember 2025. Satu peserta dapat mengajukan lebih dari satu klaim sehingga jumlah klaim tidak sama dengan jumlah individu.';
-    // Update opsi sort ke mode klaim
-    sortSel.innerHTML=`
-      <option value="klaim">Total Klaim</option>
-      <option value="nilai">Nilai Manfaat</option>`;
-    const skv=sortSel.value;
-    let data=[...D.provinces_dec];
-    if(skv==='nilai') data.sort((a,b)=>b.nilai-a.nilai);
-    else data.sort((a,b)=>b.klaim-a.klaim);
-    const totK=data.reduce((s,p)=>s+p.klaim,0);
-    const totN=data.reduce((s,p)=>s+p.nilai,0);
+    noteEl.textContent='📈 Angka merupakan total kumulatif klaim Januari–Desember 2025. Satu peserta dapat mengajukan lebih dari satu klaim sehingga jumlah klaim tidak sama dengan jumlah individu. Klik header kolom untuk mengurutkan.';
+    if(!['klaim','nilai'].includes(_provSort)) _provSort='klaim';
+    let data=applySortProv([...D.provinces_dec],_provSort);
+    const totK=D.provinces_dec.reduce((s,p)=>s+p.klaim,0);
+    const totN=D.provinces_dec.reduce((s,p)=>s+p.nilai,0);
     tbl.innerHTML=`<thead><tr>
       <th class="left">No</th><th class="left">Provinsi</th>
-      <th>Total Klaim</th><th>Nilai Manfaat</th><th>% dari Nasional</th>
+      ${thSort('klaim','Total Klaim')}${thSort('nilai','Nilai Manfaat')}
+      <th>% dari Total Nasional 2025</th>
     </tr></thead><tbody>${data.map((p,i)=>`<tr>
       <td class="left">${i+1}</td><td class="left">${p.prov}</td>
       <td class="fw-bold text-biru">${fmt(p.klaim)}</td>
@@ -1192,26 +1199,14 @@ function renderProvTable(){
   const bi=+bulanVal;
   subEl.textContent=MO_FULL[bi]+' 2025';
   noteEl.style.display='none';
-  // Reset opsi sort ke mode kepesertaan jika sebelumnya mode klaim
-  if(!sortSel.querySelector('option[value="total_tk"]')){
-    sortSel.innerHTML=`
-      <option value="total_tk">Total Tenaga Kerja</option>
-      <option value="pu">PU Aktif</option>
-      <option value="bpu">BPU Aktif</option>
-      <option value="jakon">Jasa Konstruksi</option>
-      <option value="perusahaan">Perusahaan</option>`;
-  }
-  const skv=document.getElementById('sel-sort').value;
-  let data=getProvData(bi);
-  if(skv==='total_tk') data.sort((a,b)=>b.total_tk_m-a.total_tk_m);
-  else if(skv==='pu') data.sort((a,b)=>b.pu-a.pu);
-  else if(skv==='bpu') data.sort((a,b)=>b.bpu-a.bpu);
-  else if(skv==='jakon') data.sort((a,b)=>b.jakon-a.jakon);
-  else data.sort((a,b)=>b.perusahaan-a.perusahaan);
+  if(!['perusahaan','pu','bpu','jakon','total_tk_m'].includes(_provSort)) _provSort='total_tk_m';
+  let data=applySortProv(getProvData(bi),_provSort);
   const tot=data.reduce((a,p)=>({pr:a.pr+p.perusahaan,pu:a.pu+p.pu,bpu:a.bpu+p.bpu,jk:a.jk+p.jakon,tk:a.tk+p.total_tk_m}),{pr:0,pu:0,bpu:0,jk:0,tk:0});
   tbl.innerHTML=`<thead><tr>
     <th class="left">No</th><th class="left">Provinsi</th>
-    <th>Perusahaan</th><th>PU Aktif</th><th>BPU Aktif</th><th>Jakon</th><th>Total TK</th>
+    ${thSort('perusahaan','Perusahaan')}${thSort('pu','PU Aktif')}
+    ${thSort('bpu','BPU Aktif')}${thSort('jakon','Jakon')}
+    ${thSort('total_tk_m','Total TK')}
   </tr></thead><tbody>${data.map((p,i)=>`<tr>
     <td class="left">${i+1}</td><td class="left">${p.prov}</td>
     <td>${fmt(p.perusahaan)}</td><td>${fmt(p.pu)}</td><td>${fmt(p.bpu)}</td>
