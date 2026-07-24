@@ -259,6 +259,31 @@ tfoot td:first-child,tfoot td.left{text-align:left}
 /* ===== UTILS ===== */
 .text-biru{color:var(--biru)}.text-teal{color:var(--teal)}.text-oranye{color:var(--oranye)}
 .fw-bold{font-weight:700}.mb-0{margin-bottom:0}
+
+/* ===== ANALISIS TAB ===== */
+.insight-box{background:linear-gradient(135deg,#0c1c30 0%,#1e3a5f 100%);color:var(--putih);border-radius:var(--r);padding:16px;margin-bottom:14px;position:relative;overflow:hidden}
+.insight-box::before{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(202,138,4,.15)}
+.insight-box .ib-label{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;opacity:.7;margin-bottom:6px}
+.insight-box .ib-val{font-size:clamp(26px,6vw,38px);font-weight:900;letter-spacing:-1px;line-height:1}
+.insight-box .ib-sub{font-size:11px;opacity:.65;margin-top:5px}
+.insight-box .ib-note{font-size:10px;opacity:.5;margin-top:8px;font-style:italic}
+.insight-box.gold{background:linear-gradient(135deg,#78350f 0%,#ca8a04 100%)}
+.insight-box.teal{background:linear-gradient(135deg,#0c3040 0%,#0d7490 100%)}
+.insight-box.amber{background:linear-gradient(135deg,#431407 0%,#b45309 100%)}
+.anomali-box{background:var(--oranye-bg);border:2px solid var(--oranye);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px}
+.anomali-icon{width:36px;height:36px;background:var(--oranye);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.anomali-icon svg{width:18px;height:18px;color:white}
+.anomali-title{font-size:13px;font-weight:800;color:var(--oranye);margin-bottom:3px}
+.anomali-body{font-size:12px;color:var(--teks2);line-height:1.6}
+.kuadran-wrap{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;border-radius:var(--r-sm);overflow:hidden;margin-top:8px}
+.kuadran{padding:8px;text-align:center;font-size:10px;font-weight:700;line-height:1.4}
+.kuadran.q1{background:#dbeafe;color:#1e3a5f}
+.kuadran.q2{background:#ccfbf1;color:#0d7490}
+.kuadran.q3{background:#fef9c3;color:#854d0e}
+.kuadran.q4{background:#fee2e2;color:#7f1d1d}
+.ref-line-label{font-size:10px;color:var(--teks2);margin-top:6px;display:flex;align-items:center;gap:5px}
+.ref-line-bar{width:24px;height:2px;background:var(--oranye);border-top:2px dashed var(--oranye)}
+.sumber-note{font-size:10px;color:var(--teks3);padding:8px 12px;background:var(--abu);border-radius:var(--r-xs);margin-top:6px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -298,6 +323,14 @@ tfoot td:first-child,tfoot td.left{text-align:left}
     <button class="nav-btn" onclick="showTab('klaim',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       Klaim
+    </button>
+    <button class="nav-btn" onclick="showTab('analisis',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+      Analisis
+    </button>
+    <button class="nav-btn" onclick="showTab('program',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+      Per Program
     </button>
   </div>
 </nav>
@@ -539,6 +572,247 @@ tfoot td:first-child,tfoot td.left{text-align:left}
   </div>
 </section>
 
+
+<!-- ===== TAB: ANALISIS ===== -->
+<section id="tab-analisis" class="tab-panel">
+  <div class="section-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+    Analisis Mendalam
+  </div>
+
+  <!-- Seksi 1: KPI Coverage + Claim Rate + Konsentrasi -->
+  <div class="grid-4kpi" id="kpi-analisis"></div>
+
+  <!-- Anomali BPU -->
+  <div class="anomali-box">
+    <div class="anomali-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div>
+      <div class="anomali-title">Anomali: BPU Tumbuh +43,2% dalam 12 Bulan</div>
+      <div class="anomali-body">Peserta Bukan Penerima Upah (BPU) melonjak dari <strong>9.909.438</strong> (Januari) menjadi <strong>14.195.182</strong> (Desember) — penambahan <strong>4.285.744 peserta</strong> dalam satu tahun. Ini jauh melampaui pertumbuhan PU (+1,9%) dan Jakon (+20,2%). Lonjakan terbesar terjadi pada Agustus–Desember, mengindikasikan kemungkinan program perluasan kepesertaan pekerja informal atau mandiri.</div>
+    </div>
+  </div>
+
+  <!-- Seksi 2: Gap Analysis PU Aktif vs Nonaktif -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Gap Analysis — PU Aktif vs Nonaktif</div>
+        <div class="card-sub">Sinyal potensi pergerakan kepesertaan per bulan</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="chart-wrap"><canvas id="chart-gap" height="220"></canvas></div>
+      <div class="sumber-note">⚠️ PU Nonaktif = peserta terdaftar namun tidak aktif membayar iuran. Kenaikan nonaktif dapat mengindikasikan PHK, pemutusan hubungan kerja, atau transisi ke sektor informal.</div>
+    </div>
+  </div>
+
+  <!-- Seksi 3: Scatter Growth vs Size -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Pertumbuhan vs Ukuran — Semua Provinsi</div>
+        <div class="card-sub">Sumbu X = Total TK Desember 2025 · Sumbu Y = Pertumbuhan TK Jan→Des (%)</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="kuadran-wrap">
+        <div class="kuadran q1">↗ Besar &amp; Tumbuh<br><span style="font-weight:400;font-size:9px">Prioritas pertahankan</span></div>
+        <div class="kuadran q2">↗ Kecil &amp; Tumbuh Cepat<br><span style="font-weight:400;font-size:9px">Potensi tinggi</span></div>
+        <div class="kuadran q3">↘ Besar &amp; Stagnan<br><span style="font-weight:400;font-size:9px">Perlu perhatian</span></div>
+        <div class="kuadran q4">↘ Kecil &amp; Turun<br><span style="font-weight:400;font-size:9px">Intervensi mendesak</span></div>
+      </div>
+      <div class="chart-wrap" style="margin-top:12px"><canvas id="chart-scatter" height="300"></canvas></div>
+      <div class="sumber-note">Garis referensi rata-rata nasional: pertumbuhan TK = +14,0% · median ukuran provinsi = sekitar 650.000 TK</div>
+    </div>
+  </div>
+
+  <!-- Seksi 4: Produktivitas Nilai Manfaat per Provinsi -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Produktivitas Nilai Manfaat per Klaim — Per Provinsi</div>
+        <div class="card-sub">Rata-rata nilai manfaat yang diterima per klaim (Rp) vs rata-rata nasional</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="chart-wrap"><canvas id="chart-produktivitas" height="300"></canvas></div>
+      <div class="ref-line-label"><div class="ref-line-bar"></div>Garis putus-putus = rata-rata nasional</div>
+      <div class="sumber-note">Nilai manfaat per klaim yang tinggi dapat mencerminkan klaim program JHT/JP yang lebih besar, atau dominasi peserta PU formal di provinsi tersebut.</div>
+    </div>
+  </div>
+
+  <!-- Seksi 5: Claim Rate per Provinsi -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Claim Rate per Provinsi</div>
+        <div class="card-sub">Jumlah klaim ÷ total TK aktif × 100 (Desember 2025, kumulatif)</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="chart-wrap"><canvas id="chart-claimrate" height="300"></canvas></div>
+      <div class="ref-line-label"><div class="ref-line-bar"></div>Garis putus-putus = rata-rata nasional</div>
+      <div class="sumber-note">Claim rate tinggi dapat mengindikasikan tingginya kejadian risiko kerja, atau populasi peserta yang lebih matang/senior di provinsi tersebut.</div>
+    </div>
+  </div>
+
+  <!-- Seksi 6: Analisis Konsentrasi -->
+  <div class="grid-half">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Konsentrasi Kepesertaan — 5 Provinsi Teratas</div>
+        <div class="card-sub">Desember 2025</div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chart-konsentrasi" height="220"></canvas></div>
+        <div id="konsentrasi-detail" style="margin-top:12px"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Komparasi Segmen vs Angkatan Kerja</div>
+        <div class="card-sub">Coverage Rate berdasarkan data BPS Sakernas Agustus 2025</div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chart-coverage" height="220"></canvas></div>
+        <div class="sumber-note" style="margin-top:10px">Sumber pembanding: BPS Sakernas Agustus 2025 — Angkatan Kerja: <strong>154,00 juta</strong> · Penduduk Bekerja: <strong>146,54 juta</strong>. Rilis 5 November 2025.</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ===== TAB: PROGRAM ===== -->
+<section id="tab-program" class="tab-panel">
+  <div class="section-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+    Kepesertaan &amp; Klaim per Program
+  </div>
+
+  <!-- KPI 5 Program -->
+  <div id="kpi-program" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px"></div>
+
+  <!-- TREN PER SEGMEN -->
+  <div class="card" style="border-top:3px solid var(--oranye)">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Tren per Segmen — Pilih Program</div>
+        <div class="card-sub" id="segmen-note">Peserta aktif dan klaim per segmen PU / BPU / Jakon</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <!-- Selector program -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px" id="prog-selector">
+        <!-- diisi JS -->
+      </div>
+      <!-- Selector metrik -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <label style="font-size:11px;font-weight:700;color:var(--teks2)">Tampilkan:</label>
+        <select id="seg-metric" onchange="renderSegmenCharts()" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--r-xs);font-size:12px">
+          <option value="peserta">Peserta Aktif</option>
+          <option value="klaim">Klaim Kumulatif</option>
+          <option value="nilai">Nilai Manfaat</option>
+        </select>
+      </div>
+      <!-- Note segmen tersedia -->
+      <div class="sumber-note" id="segmen-avail-note" style="margin-bottom:12px"></div>
+      <!-- Charts per segmen -->
+      <div class="grid-half">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--biru);margin-bottom:6px">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--biru);margin-right:4px"></span>
+            Penerima Upah (PU)
+          </div>
+          <div class="chart-wrap"><canvas id="chart-seg-pu" height="180"></canvas></div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--oranye);margin-bottom:6px">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--oranye);margin-right:4px"></span>
+            Bukan Penerima Upah (BPU)
+          </div>
+          <div class="chart-wrap"><canvas id="chart-seg-bpu" height="180"></canvas></div>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <div style="font-size:11px;font-weight:700;color:var(--teal);margin-bottom:6px">
+          <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--teal);margin-right:4px"></span>
+          Jasa Konstruksi (Jakon)
+        </div>
+        <div class="chart-wrap"><canvas id="chart-seg-jakon" height="160"></canvas></div>
+      </div>
+      <!-- Chart gabungan: perbandingan antar segmen -->
+      <div style="margin-top:14px" class="card" style="margin-bottom:0">
+        <div class="card-header">
+          <div class="card-title" id="seg-compare-title">Perbandingan Segmen — Klaim Kumulatif</div>
+        </div>
+        <div class="card-body"><div class="chart-wrap"><canvas id="chart-seg-compare" height="200"></canvas></div></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Tabel ringkasan program Desember -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-header">
+      <div class="card-title">Ringkasan per Program — Desember 2025 (Kumulatif)</div>
+    </div>
+    <div class="card-body no-pad">
+      <div class="tbl-wrap"><table id="tbl-program"></table></div>
+    </div>
+  </div>
+
+  <!-- Chart: Peserta Aktif per Program -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Tren Peserta Aktif per Program</div>
+      <div class="card-sub">Januari – Desember 2025</div>
+    </div>
+    <div class="card-body"><div class="chart-wrap"><canvas id="chart-prog-tk" height="220"></canvas></div></div>
+  </div>
+
+  <!-- Chart: Klaim per Program side by side -->
+  <div class="grid-half">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Tren Klaim Kumulatif per Program</div>
+      </div>
+      <div class="card-body"><div class="chart-wrap"><canvas id="chart-prog-klaim" height="220"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Komposisi Klaim Desember 2025</div>
+        <div class="card-sub">Berdasarkan jumlah kasus kumulatif</div>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chart-prog-donut" height="200"></canvas></div>
+        <div class="legend" id="prog-legend" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart: Nilai Manfaat per Program -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Nilai Manfaat Kumulatif per Program (Miliar Rp)</div>
+      <div class="card-sub">JHT mendominasi nilai manfaat yang dibayarkan</div>
+    </div>
+    <div class="card-body"><div class="chart-wrap"><canvas id="chart-prog-nilai" height="220"></canvas></div></div>
+  </div>
+
+  <!-- Chart: Rata-rata nilai per klaim per program -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Rata-rata Nilai Manfaat per Kasus — per Program</div>
+      <div class="card-sub">Total nilai kumulatif ÷ total kasus kumulatif, Desember 2025</div>
+    </div>
+    <div class="card-body"><div class="chart-wrap"><canvas id="chart-prog-avg" height="180"></canvas></div></div>
+  </div>
+
+</section>
+
 </main>
 
 <footer class="site-footer">
@@ -551,10 +825,35 @@ tfoot td:first-child,tfoot td.left{text-align:left}
 // =============================================
 const D={"monthly":[{"bulan":"Januari","perusahaan":845824,"pu_aktif":26893712,"pu_laki":17424478,"pu_perempuan":9469234,"pu_nonaktif":19107406,"bpu_aktif":9909438,"bpu_nonaktif":1233789,"jakon":5865289,"total_tk":42668439,"klaim_pu":452733,"klaim_bpu":8996,"klaim_jakon":350,"total_klaim":462079,"nilai_pu":4577553224812,"nilai_bpu":131742934926,"nilai_jakon":6489752110,"total_nilai":4715785911848},{"bulan":"Februari","perusahaan":839937,"pu_aktif":26265683,"pu_laki":17045920,"pu_perempuan":9219763,"pu_nonaktif":19150733,"bpu_aktif":9586822,"bpu_nonaktif":1260208,"jakon":41386227,"total_tk":41386227,"klaim_pu":816431,"klaim_bpu":15850,"klaim_jakon":673,"total_klaim":832954,"nilai_pu":9872851686643,"nilai_bpu":278412529432,"nilai_jakon":12809537960,"total_nilai":10164073754035},{"bulan":"Maret","perusahaan":839732,"pu_aktif":26094749,"pu_laki":16948228,"pu_perempuan":9146521,"pu_nonaktif":19144638,"bpu_aktif":9219509,"bpu_nonaktif":1289130,"jakon":40196096,"total_tk":40196096,"klaim_pu":1200164,"klaim_bpu":24245,"klaim_jakon":1014,"total_klaim":1225423,"nilai_pu":15315025271742,"nilai_bpu":438695726755,"nilai_jakon":21097355520,"total_nilai":15774818354017},{"bulan":"April","perusahaan":840429,"pu_aktif":26069435,"pu_laki":16932951,"pu_perempuan":9136484,"pu_nonaktif":18503936,"bpu_aktif":8989919,"bpu_nonaktif":1310607,"jakon":39701452,"total_tk":39701452,"klaim_pu":1484700,"klaim_bpu":29901,"klaim_jakon":1197,"total_klaim":1515798,"nilai_pu":19335832211816,"nilai_bpu":542562939805,"nilai_jakon":24526517590,"total_nilai":19902921669211},{"bulan":"Mei","perusahaan":843118,"pu_aktif":26202131,"pu_laki":17010960,"pu_perempuan":9191171,"pu_nonaktif":19285422,"bpu_aktif":8287660,"bpu_nonaktif":1336126,"jakon":39051972,"total_tk":39051972,"klaim_pu":1878325,"klaim_bpu":37613,"klaim_jakon":1422,"total_klaim":1917360,"nilai_pu":24666431330876,"nilai_bpu":691887033269,"nilai_jakon":30984698330,"total_nilai":25389303062475},{"bulan":"Juni","perusahaan":848349,"pu_aktif":26305609,"pu_laki":17066201,"pu_perempuan":9239408,"pu_nonaktif":19318915,"bpu_aktif":8621390,"bpu_nonaktif":1334245,"jakon":39354488,"total_tk":39354488,"klaim_pu":2180353,"klaim_bpu":46689,"klaim_jakon":1644,"total_klaim":2228686,"nilai_pu":28511613430818,"nilai_bpu":837596954122,"nilai_jakon":34582218460,"total_nilai":29383792603400},{"bulan":"Juli","perusahaan":855023,"pu_aktif":26442185,"pu_laki":17153693,"pu_perempuan":9288492,"pu_nonaktif":19332678,"bpu_aktif":9395802,"bpu_nonaktif":1340692,"jakon":4112913,"total_tk":39950900,"klaim_pu":2743984,"klaim_bpu":58111,"klaim_jakon":1952,"total_klaim":2804047,"nilai_pu":36464702434768,"nilai_bpu":1027166431372,"nilai_jakon":41118673140,"total_nilai":37532987539279},{"bulan":"Agustus","perusahaan":859218,"pu_aktif":26642566,"pu_laki":17275441,"pu_perempuan":9367125,"pu_nonaktif":19308455,"bpu_aktif":9962568,"bpu_nonaktif":1352601,"jakon":4393048,"total_tk":40998182,"klaim_pu":3172021,"klaim_bpu":67614,"klaim_jakon":2281,"total_klaim":3241916,"nilai_pu":42380098018974,"nilai_bpu":1189886703006,"nilai_jakon":48643878520,"total_nilai":43618628600499},{"bulan":"September","perusahaan":862199,"pu_aktif":26640225,"pu_laki":17305028,"pu_perempuan":9335197,"pu_nonaktif":19299452,"bpu_aktif":10631656,"bpu_nonaktif":1363323,"jakon":4758475,"total_tk":42030356,"klaim_pu":3620561,"klaim_bpu":77666,"klaim_jakon":2557,"total_klaim":3700784,"nilai_pu":48571355018920,"nilai_bpu":1360811180275,"nilai_jakon":53438169140,"total_nilai":49985604368335},{"bulan":"Oktober","perusahaan":867675,"pu_aktif":26783444,"pu_laki":17367198,"pu_perempuan":9416246,"pu_nonaktif":19317975,"bpu_aktif":11508482,"bpu_nonaktif":1368432,"jakon":5252357,"total_tk":43544283,"klaim_pu":4075615,"klaim_bpu":88781,"klaim_jakon":2956,"total_klaim":4167352,"nilai_pu":54868995281557,"nilai_bpu":1556067261112,"nilai_jakon":60806372830,"total_nilai":56485868915499},{"bulan":"November","perusahaan":872837,"pu_aktif":27065530,"pu_laki":17566079,"pu_perempuan":9499451,"pu_nonaktif":19288773,"bpu_aktif":12970678,"bpu_nonaktif":1384338,"jakon":5830780,"total_tk":45866988,"klaim_pu":4489044,"klaim_bpu":97857,"klaim_jakon":3374,"total_klaim":4590275,"nilai_pu":60520988116322,"nilai_bpu":1717352754802,"nilai_jakon":67073567750,"total_nilai":62305414438874},{"bulan":"Desember","perusahaan":875641,"pu_aktif":27406731,"pu_laki":17754660,"pu_perempuan":9652071,"pu_nonaktif":19271695,"bpu_aktif":14195182,"bpu_nonaktif":1391005,"jakon":7047512,"total_tk":48649425,"klaim_pu":4913646,"klaim_bpu":107440,"klaim_jakon":3704,"total_klaim":5024790,"nilai_pu":66162521201027,"nilai_bpu":1897201870572,"nilai_jakon":76289346780,"total_nilai":68136012418379}],"provinces_dec":[{"no":1,"prov":"Aceh","perusahaan":18829,"pu":283525,"bpu":91925,"jakon":115425,"total_tk":490875,"klaim":59279,"nilai":883854512130},{"no":2,"prov":"Sumatera Utara","perusahaan":45750,"pu":998178,"bpu":708761,"jakon":410115,"total_tk":2117054,"klaim":237011,"nilai":3093643709164},{"no":3,"prov":"Sumatera Barat","perusahaan":15069,"pu":256220,"bpu":239048,"jakon":89497,"total_tk":584765,"klaim":91520,"nilai":1094371154639},{"no":4,"prov":"Riau","perusahaan":20844,"pu":649504,"bpu":508575,"jakon":102139,"total_tk":1260218,"klaim":175093,"nilai":1985382483848},{"no":5,"prov":"Kepulauan Riau","perusahaan":15411,"pu":444572,"bpu":239896,"jakon":55895,"total_tk":740363,"klaim":118300,"nilai":1315156911372},{"no":6,"prov":"Jambi","perusahaan":12672,"pu":243352,"bpu":268932,"jakon":90694,"total_tk":602978,"klaim":63198,"nilai":803050620433},{"no":7,"prov":"Sumatera Selatan","perusahaan":15261,"pu":553205,"bpu":291888,"jakon":233238,"total_tk":1078331,"klaim":96501,"nilai":1341186850796},{"no":8,"prov":"Kep. Bangka Belitung","perusahaan":4550,"pu":114348,"bpu":55671,"jakon":34461,"total_tk":204480,"klaim":21397,"nilai":245692655226},{"no":9,"prov":"Bengkulu","perusahaan":3829,"pu":141632,"bpu":95578,"jakon":25509,"total_tk":262719,"klaim":24695,"nilai":295568908709},{"no":10,"prov":"Lampung","perusahaan":12335,"pu":375973,"bpu":124727,"jakon":110174,"total_tk":610874,"klaim":72818,"nilai":1018157034327},{"no":11,"prov":"DKI Jakarta","perusahaan":116824,"pu":5862518,"bpu":1267183,"jakon":1191556,"total_tk":8321257,"klaim":709275,"nilai":12567341165546},{"no":12,"prov":"Jawa Barat","perusahaan":98029,"pu":3772100,"bpu":1965615,"jakon":673534,"total_tk":6411249,"klaim":751339,"nilai":9984752541215},{"no":13,"prov":"Banten","perusahaan":41759,"pu":1686331,"bpu":1028656,"jakon":371049,"total_tk":3086036,"klaim":342236,"nilai":4960463587863},{"no":14,"prov":"Jawa Tengah","perusahaan":107420,"pu":3102726,"bpu":1075938,"jakon":631701,"total_tk":4810365,"klaim":573815,"nilai":5744856107799},{"no":15,"prov":"DI Yogyakarta","perusahaan":18787,"pu":415389,"bpu":129888,"jakon":84686,"total_tk":629963,"klaim":97917,"nilai":1211512872736},{"no":16,"prov":"Jawa Timur","perusahaan":132364,"pu":3373509,"bpu":1530232,"jakon":1071693,"total_tk":5975434,"klaim":578029,"nilai":8367364549239},{"no":17,"prov":"Bali","perusahaan":33778,"pu":623750,"bpu":469156,"jakon":98999,"total_tk":1191905,"klaim":105684,"nilai":1656980361401},{"no":18,"prov":"NTB","perusahaan":10281,"pu":295823,"bpu":324646,"jakon":72442,"total_tk":692911,"klaim":40413,"nilai":588312991418},{"no":19,"prov":"NTT","perusahaan":9111,"pu":181949,"bpu":288712,"jakon":65112,"total_tk":535773,"klaim":34507,"nilai":510967378465},{"no":20,"prov":"Kalimantan Barat","perusahaan":13807,"pu":440002,"bpu":206956,"jakon":155170,"total_tk":802128,"klaim":79754,"nilai":889669477799},{"no":21,"prov":"Kalimantan Tengah","perusahaan":10557,"pu":371542,"bpu":232421,"jakon":166289,"total_tk":770252,"klaim":97326,"nilai":1048911938000},{"no":22,"prov":"Kalimantan Selatan","perusahaan":15725,"pu":422067,"bpu":415111,"jakon":77484,"total_tk":914662,"klaim":83632,"nilai":1008707165605},{"no":23,"prov":"Kalimantan Timur","perusahaan":19465,"pu":691611,"bpu":506185,"jakon":253249,"total_tk":1451045,"klaim":155656,"nilai":1776014895850},{"no":24,"prov":"Kalimantan Utara","perusahaan":3524,"pu":104428,"bpu":73641,"jakon":36309,"total_tk":214378,"klaim":26496,"nilai":285537462006},{"no":25,"prov":"Sulawesi Utara","perusahaan":4838,"pu":273684,"bpu":206606,"jakon":40144,"total_tk":520434,"klaim":37285,"nilai":557242253701},{"no":26,"prov":"Gorontalo","perusahaan":3725,"pu":64281,"bpu":184150,"jakon":67488,"total_tk":315919,"klaim":11931,"nilai":198550780789},{"no":27,"prov":"Sulawesi Tengah","perusahaan":9075,"pu":322855,"bpu":291508,"jakon":87717,"total_tk":702080,"klaim":62947,"nilai":671913580530},{"no":28,"prov":"Sulawesi Selatan","perusahaan":28586,"pu":591356,"bpu":639682,"jakon":348256,"total_tk":1579294,"klaim":120855,"nilai":1841583057437},{"no":29,"prov":"Sulawesi Barat","perusahaan":1173,"pu":24398,"bpu":34994,"jakon":14979,"total_tk":74371,"klaim":15566,"nilai":272405091149},{"no":30,"prov":"Sulawesi Tenggara","perusahaan":6992,"pu":183826,"bpu":94561,"jakon":28195,"total_tk":306582,"klaim":30566,"nilai":347387965706},{"no":31,"prov":"Maluku","perusahaan":6047,"pu":74820,"bpu":90706,"jakon":76252,"total_tk":241778,"klaim":20172,"nilai":293476860833},{"no":32,"prov":"Maluku Utara","perusahaan":3854,"pu":196329,"bpu":98021,"jakon":15658,"total_tk":310008,"klaim":28791,"nilai":238985831155},{"no":33,"prov":"Papua","perusahaan":8877,"pu":156699,"bpu":143808,"jakon":132243,"total_tk":432750,"klaim":33665,"nilai":622705356527},{"no":34,"prov":"Papua Barat","perusahaan":6493,"pu":114229,"bpu":271805,"jakon":20160,"total_tk":406194,"klaim":27121,"nilai":414304304967}],"prov_monthly":{"Aceh":[477621,435552,408958,399741,389918,389911,376028,391247,403231,425166,450770,490875],"Sumatera Utara":[2066915,1982041,1913244,1843716,1810996,1828794,1804837,1798720,1874467,1965185,2011640,2117054],"Sumatera Barat":[557000,536647,509661,511379,485202,486021,491011,499606,508418,522429,547009,584765],"Riau":[1124421,1061024,998168,983431,893204,910502,960125,1009772,1055613,1080346,1092418,1260218],"Kepulauan Riau":[629069,616911,608199,598814,596551,613291,618295,640263,650257,660601,669524,740363],"Jambi":[527041,518410,479728,445913,473052,463787,462748,473410,515704,534620,554391,602978],"Sumatera Selatan":[922069,889434,859684,853056,817598,862028,830238,920825,938037,963930,994849,1078331],"Kep. Bangka Belitung":[183785,178864,167000,163729,160130,160859,163347,172581,187438,192213,200403,204480],"Bengkulu":[197940,190848,168987,167243,163733,168566,166951,176601,180014,208379,244723,262719],"Lampung":[568468,507419,488317,479190,486281,487584,486452,524489,538952,555426,588135,610874],"DKI Jakarta":[8102790,8015475,7813606,7767862,7672198,7714347,7759760,7797737,7862892,7943914,8083443,8321257],"Jawa Barat":[5092901,4963284,4749904,4718022,4784017,4845388,4917346,5033108,5183211,5343339,6172016,6411249],"Banten":[2831669,2753491,2683372,2610106,2562302,2538233,2570416,2596006,2682386,2717358,2814117,3086036],"Jawa Tengah":[4107023,3996584,4010387,3973808,3992070,4047403,4145390,4233413,4320666,4468984,4637939,4810365],"DI Yogyakarta":[564836,542874,536992,537226,531560,545542,559278,573776,586560,610766,619698,629963],"Jawa Timur":[5015108,4953256,4847443,4813323,4767325,4786525,4922913,5150627,5276896,5510944,5733450,5975434],"Bali":[1103521,1103893,1061885,1066571,1078777,1082275,1096960,1109943,1110344,1135112,1153498,1191905],"NTB":[556380,530976,505443,496608,468536,486005,501182,533344,553724,582718,628493,692911],"NTT":[388448,363048,326280,323249,319466,325744,431593,436652,446283,470326,474479,535773],"Kalimantan Barat":[731294,671836,641733,634881,596042,586930,587174,626829,662790,666937,722468,802128],"Kalimantan Tengah":[627815,577486,563894,555394,542913,538918,551229,560988,578236,647400,670551,770252],"Kalimantan Selatan":[698809,679708,679613,698538,691451,727452,732103,747213,765711,809397,849024,914662],"Kalimantan Timur":[1379340,1312217,1291076,1278988,1174898,1183362,1205810,1202310,1208309,1302496,1335388,1451045],"Kalimantan Utara":[218387,198555,191903,188724,175613,135024,129771,131596,138549,150803,171129,214378],"Sulawesi Utara":[498494,460235,457394,434249,434469,443226,448388,455747,456950,465995,490053,520434],"Gorontalo":[243074,245417,242826,242958,236675,237412,240845,246758,251497,257077,284444,315919],"Sulawesi Tengah":[550528,516566,503580,502486,501607,476372,531490,538891,545149,587927,664199,702080],"Sulawesi Selatan":[1129084,1093897,1064245,1047146,1052185,1076046,1021998,1086080,1139633,1284547,1377472,1579294],"Sulawesi Barat":[67925,65338,61476,59048,49340,56197,61766,61645,63759,65445,69727,74371],"Sulawesi Tenggara":[316035,299266,288072,268780,247032,237712,236725,264603,265891,271759,280499,306582],"Maluku":[158718,156026,154876,148127,140683,135330,130461,144772,160077,178066,228363,241778],"Maluku Utara":[251626,244928,240989,236962,235424,235119,243539,250775,260735,261285,287049,310008],"Papua":[406031,369679,329661,320824,279594,264695,244857,257197,304887,335394,393635,432750],"Papua Barat":[374274,355042,347500,331360,241130,277888,319874,350658,353090,367999,371992,406194]}};
 
+
+// =============================================
+// DATA PER PROGRAM (JKK/JKM/JHT/JP/JKP)
+// Sumber: sheet per program dari 12 file xlsx
+// =============================================
+const PROG={"JKK":{"tk":[42668439,41386227,40196096,39701452,4562181,39354488,39950900,40998182,42030356,43544283,45866988,48649425],"klaim":[41894,57798,90123,111729,134207,157925,185652,212357,238675,265879,291995,319382],"nilai":[278264518977,614680975929,1006282520960,1289383267269,1615824839071,1953845991748,2376616642742,2781501814839,3177556389471,3608709704316,4001130256528,4423788133412]},"JKM":{"tk":[42668439,41386227,40196096,39701452,39051972,39354488,39950900,40998182,42030356,43544283,45866988,48649425],"klaim":[27224,49059,64812,73260,85108,19499,127110,144486,160308,175796,187621,203977],"nilai":[380898750000,773641050000,1142569750000,1366404650000,1695498050000,708823500000,2480662950000,2847071150000,3236965950000,3655316050000,3991004550000,4352456250000]},"JHT":{"tk":[19009325,19103255,19218494,19197040,19266430,19398437,19510358,19624348,19715669,19778399,19870796,19949527],"klaim":[261367,559148,854531,1085308,1393474,1703176,2097280,2455538,2828757,3206925,3557742,3902875],"nilai":[3884781287294,8465030609698,13132237237407,16620513375894,21243553693646,25719530984708,31475405608070,36623350332045,42029678221560,47474447591126,52411014771679,57255170871550]},"JP":{"tk":[14905059,14993426,15073256,15053612,15067370,15129918,15194726,15245858,15294605,15316339,15379794,15443399],"klaim":[108882,122953,130594,132622,140487,142938,153874,158685,161496,170773,172910,178840],"nilai":[137856618628,235870881508,323953925578,393563753218,486083796838,558650943794,675014011807,763755721975,841798558454,955636965667,1028480607657,1128075388317]},"JKP":{"tk":[14354906,15655722,16407670,16471615,16609213,16613782,16704348,16864751,16957345,17035998,17116480,17257289],"klaim":[22712,43996,85363,112879,164084,205148,240131,270850,311548,347979,380007,419716],"nilai":[33984736948,74850236900,169774920072,233056622830,348342682920,442941183150,525288326660,602949581640,699605248850,791758604390,873784253010,976521775100]}};
+const PROG_META={
+  JKK:{name:'Jaminan Kecelakaan Kerja',color:'#1e3a5f',peserta:'PU + BPU + Jakon'},
+  JKM:{name:'Jaminan Kematian',color:'#0d7490',peserta:'PU + BPU + Jakon'},
+  JHT:{name:'Jaminan Hari Tua',color:'#ca8a04',peserta:'PU + BPU'},
+  JP: {name:'Jaminan Pensiun',color:'#b45309',peserta:'PU'},
+  JKP:{name:'Jaminan Kehilangan Pekerjaan',color:'#475569',peserta:'PU Formal'},
+};
 const MO=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
 const MO_FULL=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const CLR={biru:'#1e3a5f',oranye:'#ca8a04',teal:'#0d7490',amber:'#b45309'};
 
+
+// Data per program × per segmen (PU/BPU/Jakon)
+const PROGSEG={"JKK":{"pu_aktif":[26893712,26265683,26094749,26069435,26202131,26305609,26442185,26642566,26640225,26783444,27065530,27406731],"bpu_aktif":[9909438,9586822,9219509,8989919,8287660,8621390,9395802,9962568,10631656,11508482,12970678,14195182],"jakon_aktif":[5865289,41386227,40196096,39701452,4562181,4427489,4112913,4393048,4758475,5252357,5830780,7047512],"klaim_pu":[38126,52572,82089,102088,122728,144459,169618,193622,217367,241649,264950,289388],"klaim_bpu":[3431,4580,7061,8489,10105,11875,14144,16523,18825,21359,23767,26399],"klaim_jakon":[337,646,973,1152,1374,1591,1890,2212,2483,2871,3278,3595],"klaim_pak_pu":[30,49,141,0,91,101,113,118,123,133,142,148],"klaim_pak_bpu":[3,4,16,0,9,9,9,9,9,10,10,10],"nilai_pu":[248390218177,547460684975,895844759224,1151134213789,1438981598393,1741506211450,2117876201526,2476179500869,2828949961435,3211741895827,3559015836045,3928016266090],"nilai_bpu":[23930548690,55544752994,91062406216,115612535890,147874542348,179983561838,220225768076,259576435450,298276258896,339731435659,379062852733,424020520542],"nilai_jakon":[5943752110,11675537960,19375355520,22636517590,28968698330,32356218460,38514673140,45745878520,50330169140,57236372830,63051567750,71751346780]},"JKM":{"pu_aktif":[26893712,26265683,26094749,26069435,26202131,26305609,26442185,26642566,26640225,26783444,27065530,27406731],"bpu_aktif":[9909438,9586822,9219509,8989919,8287660,8621390,9395802,9962568,10631656,11508482,12970678,14195182],"jakon_aktif":[5865289,41386227,40196096,39701452,39051972,39354488,39950900,40998182,42030356,43544283,5830780,7047512],"klaim_pu":[24527,43530,56266,62808,71813,3405,107226,121473,133880,145364,154057,166847],"klaim_bpu":[2684,5502,8505,10407,13247,16041,19822,22944,26354,30347,33468,37021],"klaim_jakon":[13,27,41,45,48,53,62,69,74,85,96,109],"nilai_pu":[276346250000,556431550000,803008750000,949540150000,1164924550000,69040500000,1696762950000,1943695150000,2205898450000,2475828550000,2693693550000,2923251750000],"nilai_bpu":[104006500000,216075500000,337839000000,414974500000,528557500000,637557000000,781296000000,900478000000,1027959500000,1175917500000,1293289000000,1424666500000],"nilai_jakon":[546000000,1134000000,1722000000,1890000000,2016000000,2226000000,2604000000,2898000000,3108000000,3570000000,4022000000,4538000000]},"JHT":{"pu_aktif":[18303475,18412799,18525428,18503936,18565211,18650871,18740593,18829213,18894253,18934654,19017620,19087936],"bpu_aktif":[705850,690456,693066,693104,701219,747566,769765,795135,821416,843745,853176,861591],"jakon_aktif":[0,0,0,0,0,0,0,0,0,0,0,0],"klaim_pu":[258486,553380,845852,1074303,1379213,1684403,2073135,2427391,2796270,3169850,3517120,3858855],"klaim_bpu":[2881,5768,8679,11005,14261,18773,24145,28147,32487,37075,40622,44020],"klaim_jakon":[0,0,0,0,0,0,0,0,0,0,0,0],"nilai_pu":[3880975401058,8458238333260,13122442916868,16608537471979,21228098702725,25699474592424,31449760944775,36593518064490,41995102800180,47434029265673,52366013869610,57206656021520],"nilai_bpu":[3805886236,6792276438,9794320539,11975903915,15454990921,20056392284,25644663296,29832267556,34575421379,40418325453,45000902069,48514850030],"nilai_jakon":[0,0,0,0,0,0,0,0,0,0,0,0]},"JP":{"pu_aktif":[14905059,14993426,15073256,15053612,15067370,15129918,15194726,15245858,15294605,15316339,15379794,15443399],"bpu_aktif":[0,0,0,0,0,0,0,0,0,0,0,0],"jakon_aktif":[0,0,0,0,0,0,0,0,0,0,0,0],"klaim_pu":[108882,122953,130594,132622,140487,142938,153874,158685,161496,170773,172910,178840],"klaim_bpu":[0,0,0,0,0,0,0,0,0,0,0,0],"klaim_jakon":[0,0,0,0,0,0,0,0,0,0,0,0],"nilai_pu":[137856618628,235870881508,323953925578,393563753218,486083796838,558650943794,675014011807,763755721975,841798558454,955636965667,1028480607657,1128075388317],"nilai_bpu":[0,0,0,0,0,0,0,0,0,0,0,0],"nilai_jakon":[0,0,0,0,0,0,0,0,0,0,0,0]},"JKP":{"pu_aktif":[14354906,15655722,16407670,16471615,16609213,16613782,16704348,16864751,16957345,17035998,17116480,17257289],"bpu_aktif":[0,0,0,0,0,0,0,0,0,0,0,0],"jakon_aktif":[0,0,0,0,0,0,0,0,0,0,0,0],"klaim_pu":[22712,43996,85363,112879,164084,205148,240131,270850,311548,347979,380007,419716],"klaim_bpu":[0,0,0,0,0,0,0,0,0,0,0,0],"klaim_jakon":[0,0,0,0,0,0,0,0,0,0,0,0],"nilai_pu":[33984736948,74850236900,169774920072,233056622830,348342682920,442941183150,525288326660,602949581640,699605248850,791758604390,873784253010,976521775100],"nilai_bpu":[0,0,0,0,0,0,0,0,0,0,0,0],"nilai_jakon":[0,0,0,0,0,0,0,0,0,0,0,0]}};
+
+// Segmen yang tersedia per program
+const PROG_SEGMEN={
+  JKK:{pu:true,bpu:true,jakon:true,note:'PU + BPU + Jasa Konstruksi'},
+  JKM:{pu:true,bpu:true,jakon:true,note:'PU + BPU + Jasa Konstruksi'},
+  JHT:{pu:true,bpu:true,jakon:false,note:'PU + BPU (Jakon tidak termasuk JHT)'},
+  JP: {pu:true,bpu:false,jakon:false,note:'Hanya Penerima Upah (PU)'},
+  JKP:{pu:true,bpu:false,jakon:false,note:'Hanya PU Formal (hubungan kerja)'},
+};
 const fmt=n=>Math.round(n).toLocaleString('id-ID');
 const fmtM=n=>{n=+n;if(n>=1e12)return(n/1e12).toFixed(2)+' T';if(n>=1e9)return(n/1e9).toFixed(1)+' M';return fmt(n);};
 const pct=(a,b)=>{const d=(a-b)/b*100;return(d>=0?'+':'')+d.toFixed(1)+'%';};
@@ -813,6 +1112,477 @@ function initKlaim(){
   </tr>`).join('')}</tbody>`;
 }
 
+
+
+// =============================================
+// PER PROGRAM
+// =============================================
+function initProgram(){
+  const progs=['JKK','JKM','JHT','JP','JKP'];
+  const dec_idx=11, jan_idx=0;
+
+  // KPI cards per program
+  const kpiEl=document.getElementById('kpi-program');
+  const totalKlaimNas=progs.reduce((s,p)=>s+PROG[p].klaim[dec_idx],0);
+  kpiEl.innerHTML=progs.map(prog=>{
+    const m=PROG_META[prog];
+    const kDec=PROG[prog].klaim[dec_idx];
+    const kJan=PROG[prog].klaim[jan_idx];
+    const nDec=PROG[prog].nilai[dec_idx];
+    const tkDec=PROG[prog].tk[dec_idx];
+    const sharePct=(kDec/totalKlaimNas*100).toFixed(1);
+    return`<div class="kpi-card" style="border-top:3px solid ${m.color};border-left:none">
+      <div class="kpi-label" style="color:${m.color}">${prog} — ${m.name}</div>
+      <div style="font-size:9px;color:var(--teks3);margin-bottom:6px">${m.peserta}</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div><div style="font-size:9px;color:var(--teks2);font-weight:700">PESERTA AKTIF</div><div style="font-size:16px;font-weight:800">${fmt(tkDec)}</div></div>
+        <div><div style="font-size:9px;color:var(--teks2);font-weight:700">KLAIM KUM.</div><div style="font-size:16px;font-weight:800">${fmt(kDec)}</div></div>
+        <div><div style="font-size:9px;color:var(--teks2);font-weight:700">NILAI KUM.</div><div style="font-size:16px;font-weight:800">${fmtM(nDec)}</div></div>
+      </div>
+      <span class="kpi-badge" style="margin-top:6px;background:rgba(30,58,95,.1);color:var(--biru)">${sharePct}% dari total klaim nasional</span>
+    </div>`;
+  }).join('');
+
+  // Tabel ringkasan
+  const rows=progs.map(prog=>{
+    const m=PROG_META[prog];
+    const kDec=PROG[prog].klaim[dec_idx];
+    const nDec=PROG[prog].nilai[dec_idx];
+    const tkDec=PROG[prog].tk[dec_idx];
+    const avgNilai=kDec>0?Math.round(nDec/kDec):0;
+    const kJan=PROG[prog].klaim[jan_idx];
+    const growth=((kDec-kJan)/kJan*100);
+    return`<tr>
+      <td class="left"><span style="font-weight:800;color:${m.color}">${prog}</span></td>
+      <td class="left" style="font-size:11px">${m.name}</td>
+      <td class="left" style="font-size:10px;color:var(--teks2)">${m.peserta}</td>
+      <td>${fmt(tkDec)}</td>
+      <td class="fw-bold text-biru">${fmt(kDec)}</td>
+      <td>${fmtM(nDec)}</td>
+      <td>Rp ${fmt(avgNilai)}</td>
+      <td style="font-weight:700;color:${growth>=0?'var(--teal)':'var(--oranye)'}">${growth>=0?'+':''}${growth.toFixed(1)}%</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('tbl-program').innerHTML=`<thead><tr>
+    <th class="left">Kode</th><th class="left">Program</th><th class="left">Peserta</th>
+    <th>TK Aktif</th><th>Klaim Kum.</th><th>Nilai Kum.</th><th>Avg/Klaim</th><th>Growth Klaim</th>
+  </tr></thead><tbody>${rows}</tbody>`;
+
+  // Chart: TK per program (line)
+  mkChart('chart-prog-tk',{type:'line',data:{labels:MO,datasets:
+    progs.map(prog=>({
+      label:prog,
+      data:PROG[prog].tk,
+      borderColor:PROG_META[prog].color,
+      backgroundColor:'transparent',
+      tension:.3,pointRadius:3,borderWidth:2,
+    }))
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10},padding:8}}},
+    scales:{...sX(),...sY(v=>fmtM(v))}}});
+
+  // Chart: Klaim kumulatif per program (bar stacked)
+  mkChart('chart-prog-klaim',{type:'bar',data:{labels:MO,datasets:
+    progs.map(prog=>({
+      label:prog,
+      data:PROG[prog].klaim,
+      backgroundColor:PROG_META[prog].color,
+      stack:'k',borderRadius:2,
+    }))
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10},padding:6}}},
+    scales:{x:{stacked:true,ticks:{font:{size:10}},grid:{display:false}},
+      y:{stacked:true,ticks:{font:{size:10}}}}}});
+
+  // Chart: Donut komposisi klaim
+  const klaimDec=progs.map(p=>PROG[p].klaim[dec_idx]);
+  mkChart('chart-prog-donut',{type:'doughnut',data:{
+    labels:progs.map(p=>p+' – '+PROG_META[p].name),
+    datasets:[{data:klaimDec,backgroundColor:progs.map(p=>PROG_META[p].color),borderWidth:2,borderColor:'#fff'}]
+  },options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
+    plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>{
+        const total=klaimDec.reduce((s,v)=>s+v,0);
+        return` ${fmt(c.parsed)} (${(c.parsed/total*100).toFixed(1)}%)`;
+      }}}
+    }
+  }});
+
+  // Legend manual
+  document.getElementById('prog-legend').innerHTML=progs.map(p=>
+    `<div class="legend-item"><div class="legend-dot" style="background:${PROG_META[p].color}"></div>${p}</div>`
+  ).join('');
+
+  // Chart: Nilai per program (area line)
+  mkChart('chart-prog-nilai',{type:'line',data:{labels:MO,datasets:
+    progs.map((prog,i)=>({
+      label:prog,
+      data:PROG[prog].nilai.map(v=>v/1e9),
+      borderColor:PROG_META[prog].color,
+      backgroundColor:PROG_META[prog].color+'22',
+      fill: prog==='JHT',  // hanya JHT yang fill
+      tension:.3,pointRadius:3,borderWidth:prog==='JHT'?2.5:1.5,
+    }))
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10},padding:8}},
+      tooltip:{callbacks:{label:c=>` ${c.dataset.label}: Rp ${c.parsed.y.toFixed(0)} M`}}
+    },
+    scales:{...sX(),...sY(v=>'Rp '+v.toFixed(0)+'M')}}});
+
+  // Chart: rata-rata nilai per klaim (bar horizontal)
+  const avgData=progs.map(prog=>{
+    const k=PROG[prog].klaim[dec_idx];
+    const n=PROG[prog].nilai[dec_idx];
+    return{prog, avg: k>0?Math.round(n/k):0};
+  }).sort((a,b)=>b.avg-a.avg);
+
+  mkChart('chart-prog-avg',{type:'bar',data:{
+    labels:avgData.map(d=>d.prog+' ('+PROG_META[d.prog].name+')'),
+    datasets:[{
+      label:'Rata-rata Nilai per Klaim (Rp)',
+      data:avgData.map(d=>d.avg),
+      backgroundColor:avgData.map(d=>PROG_META[d.prog].color),
+      borderRadius:4,
+    }]
+  },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>' Rp '+fmt(c.parsed.x)}}
+    },
+    scales:{
+      x:{ticks:{font:{size:10},callback:v=>'Rp '+fmtM(v)},grid:{color:'#e7e3da'}},
+      y:{ticks:{font:{size:10}},grid:{display:false}}
+    }
+  }});
+
+  // Init selector program untuk chart segmen
+  let activeProg='JKK';
+  const sel=document.getElementById('prog-selector');
+  if(sel){
+    sel.innerHTML=progs.map(p=>`
+      <button onclick="setActiveProg('${p}')" id="btn-prog-${p}"
+        style="padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;
+        border:2px solid ${PROG_META[p].color};
+        background:${'JKK'===p?PROG_META[p].color:'transparent'};
+        color:${'JKK'===p?'#fff':PROG_META[p].color};
+        transition:all .15s">
+        ${p}
+      </button>`).join('');
+  }
+  renderSegmenCharts();
+}
+
+let _activeProg='JKK';
+function setActiveProg(prog){
+  _activeProg=prog;
+  // Update button style
+  ['JKK','JKM','JHT','JP','JKP'].forEach(p=>{
+    const btn=document.getElementById('btn-prog-'+p);
+    if(!btn)return;
+    btn.style.background=p===prog?PROG_META[p].color:'transparent';
+    btn.style.color=p===prog?'#fff':PROG_META[p].color;
+  });
+  renderSegmenCharts();
+}
+
+function renderSegmenCharts(){
+  const prog=_activeProg;
+  const metric=document.getElementById('seg-metric')?.value||'peserta';
+  const seg=PROG_SEGMEN[prog];
+  const d=PROGSEG[prog];
+  const m=PROG_META[prog];
+
+  // Update notes
+  const noteEl=document.getElementById('segmen-note');
+  if(noteEl) noteEl.textContent=`${prog} — ${m.name} | ${m.peserta}`;
+  const availEl=document.getElementById('segmen-avail-note');
+  if(availEl) availEl.textContent=`Cakupan segmen: ${seg.note}`;
+
+  // Pilih data berdasarkan metrik
+  const getDataPU = ()=> metric==='peserta'?d.pu_aktif : metric==='klaim'?d.klaim_pu : d.nilai_pu.map(v=>v/1e9);
+  const getDataBPU= ()=> metric==='peserta'?d.bpu_aktif: metric==='klaim'?d.klaim_bpu: d.nilai_bpu.map(v=>v/1e9);
+  const getDataJK = ()=> metric==='peserta'?d.jakon_aktif:metric==='klaim'?d.klaim_jakon:d.nilai_jakon.map(v=>v/1e9);
+
+  const yFmt = metric==='nilai'
+    ? v=>'Rp '+v.toFixed(0)+'M'
+    : v=>fmtM(v);
+
+  const baseOpts={
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{...sX(),y:{ticks:{font:{size:10},callback:yFmt},grid:{color:'#e7e3da'}}}
+  };
+
+  // Chart PU
+  mkChart('chart-seg-pu',{type:'line',data:{labels:MO,datasets:[{
+    label:'PU',data:getDataPU(),
+    borderColor:CLR.biru,backgroundColor:'rgba(30,58,95,.1)',
+    fill:true,tension:.35,pointRadius:4,borderWidth:2.5,
+  }]},options:baseOpts});
+
+  // Chart BPU
+  if(seg.bpu){
+    mkChart('chart-seg-bpu',{type:'line',data:{labels:MO,datasets:[{
+      label:'BPU',data:getDataBPU(),
+      borderColor:CLR.oranye,backgroundColor:'rgba(202,138,4,.1)',
+      fill:true,tension:.35,pointRadius:4,borderWidth:2.5,
+    }]},options:baseOpts});
+  } else {
+    const cvs=document.getElementById('chart-seg-bpu');
+    if(cvs){
+      if(charts['chart-seg-bpu'])charts['chart-seg-bpu'].destroy();
+      const ctx=cvs.getContext('2d');
+      ctx.clearRect(0,0,cvs.width,cvs.height);
+      ctx.font='12px Segoe UI';ctx.fillStyle='#94a3b8';ctx.textAlign='center';
+      ctx.fillText(`${prog} tidak mencakup segmen BPU`,cvs.width/2,80);
+    }
+  }
+
+  // Chart Jakon
+  if(seg.jakon){
+    mkChart('chart-seg-jakon',{type:'line',data:{labels:MO,datasets:[{
+      label:'Jakon',data:getDataJK(),
+      borderColor:CLR.teal,backgroundColor:'rgba(13,116,144,.1)',
+      fill:true,tension:.35,pointRadius:4,borderWidth:2.5,
+    }]},options:baseOpts});
+  } else {
+    const cvs=document.getElementById('chart-seg-jakon');
+    if(cvs){
+      if(charts['chart-seg-jakon'])charts['chart-seg-jakon'].destroy();
+      const ctx=cvs.getContext('2d');
+      ctx.clearRect(0,0,cvs.width,cvs.height);
+      ctx.font='12px Segoe UI';ctx.fillStyle='#94a3b8';ctx.textAlign='center';
+      ctx.fillText(`${prog} tidak mencakup segmen Jasa Konstruksi`,cvs.width/2,60);
+    }
+  }
+
+  // Chart perbandingan gabungan (stacked bar)
+  const titleEl=document.getElementById('seg-compare-title');
+  const metricLabel=metric==='peserta'?'Peserta Aktif':metric==='klaim'?'Klaim Kumulatif':'Nilai Manfaat';
+  if(titleEl) titleEl.textContent=`Perbandingan Segmen — ${metricLabel} (${prog})`;
+
+  const datasets=[];
+  if(seg.pu)    datasets.push({label:'PU',   data:getDataPU(), backgroundColor:CLR.biru,  stack:'s',borderRadius:2});
+  if(seg.bpu)   datasets.push({label:'BPU',  data:getDataBPU(),backgroundColor:CLR.oranye,stack:'s',borderRadius:2});
+  if(seg.jakon) datasets.push({label:'Jakon',data:getDataJK(), backgroundColor:CLR.teal,  stack:'s',borderRadius:2});
+
+  mkChart('chart-seg-compare',{type:'bar',data:{labels:MO,datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:11}}}},
+      scales:{
+        x:{stacked:true,ticks:{font:{size:10}},grid:{display:false}},
+        y:{stacked:true,ticks:{font:{size:10},callback:yFmt},grid:{color:'#e7e3da'}}
+      }
+    }
+  });
+}
+
+// =============================================
+// ANALISIS
+// =============================================
+function initAnalisis(){
+  const dec=D.monthly[11], jan=D.monthly[0];
+  const provDec=D.provinces_dec;
+
+  // BPS constants (Sakernas Agustus 2025, rilis 5 Nov 2025)
+  const AK_BPS = 154000000;   // Angkatan Kerja
+  const PB_BPS = 146540000;   // Penduduk Bekerja
+
+  const totalTK = dec.total_tk;
+  const totalKlaim = dec.total_klaim;
+  const totalNilai = dec.total_nilai;
+
+  // Coverage rates
+  const cov_ak  = (totalTK / AK_BPS * 100).toFixed(1);
+  const cov_pb  = (totalTK / PB_BPS * 100).toFixed(1);
+  // Claim rate nasional
+  const claimRateNas = (totalKlaim / totalTK * 100).toFixed(2);
+  // Konsentrasi top 5
+  const top5 = [...provDec].sort((a,b)=>b.total_tk-a.total_tk).slice(0,5);
+  const top5Sum = top5.reduce((s,p)=>s+p.total_tk,0);
+  const konsPct = (top5Sum/totalTK*100).toFixed(1);
+  // Nilai per klaim nasional
+  const nilaiPerKlaim = Math.round(totalNilai/totalKlaim);
+
+  // KPI Cards
+  buildBento('kpi-analisis',[
+    {label:'Coverage Rate vs Angkatan Kerja',val:cov_ak+'%',sub:'48,6 jt ÷ 154,0 jt (BPS Ags 2025)',cls:'',icon:'workers'},
+    {label:'Coverage Rate vs Penduduk Bekerja',val:cov_pb+'%',sub:'48,6 jt ÷ 146,5 jt (BPS Ags 2025)',cls:'teal',icon:'pu'},
+    {label:'Claim Rate Nasional',val:claimRateNas+'%',sub:'Klaim kum. ÷ total TK aktif',cls:'orange',icon:'doc'},
+    {label:'Konsentrasi 5 Provinsi Teratas',val:konsPct+'%',sub:'dari total nasional Des 2025',cls:'amber',icon:'building'},
+  ]);
+
+  // === CHART 1: GAP ANALYSIS ===
+  mkChart('chart-gap',{type:'bar',data:{labels:MO,datasets:[
+    {label:'PU Aktif',data:D.monthly.map(m=>m.pu_aktif),backgroundColor:CLR.biru,stack:'s',borderRadius:2},
+    {label:'PU Nonaktif',data:D.monthly.map(m=>m.pu_nonaktif),backgroundColor:'rgba(30,58,95,.25)',stack:'s',borderRadius:2},
+  ]},options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:11}}},
+      tooltip:{callbacks:{afterBody:items=>{
+        const i=items[0].dataIndex;
+        const aktif=D.monthly[i].pu_aktif;
+        const non=D.monthly[i].pu_nonaktif;
+        const rasio=(non/aktif*100).toFixed(1);
+        return['Rasio nonaktif: '+rasio+'%'];
+      }}}
+    },
+    scales:{x:{stacked:true,ticks:{font:{size:10}},grid:{display:false}},
+      y:{stacked:true,ticks:{font:{size:10},callback:v=>fmtM(v)},grid:{color:'#e7e3da'}}}
+  }});
+
+  // === CHART 2: SCATTER PLOT ===
+  // Hitung growth per provinsi: Jan vs Des
+  const scatterData = provDec.map(p=>{
+    const nameProv = p.prov;
+    const janVals = D.prov_monthly[nameProv]||D.prov_monthly[Object.keys(D.prov_monthly).find(k=>k===nameProv)||'']||[];
+    const tkJan = janVals[0]||p.total_tk;
+    const tkDes = p.total_tk;
+    const growth = ((tkDes-tkJan)/tkJan*100);
+    return {x:tkDes, y:parseFloat(growth.toFixed(1)), label:nameProv};
+  });
+
+  const avgGrowth = scatterData.reduce((s,p)=>s+p.y,0)/scatterData.length;
+  const medianX  = [...scatterData].sort((a,b)=>a.x-b.x)[Math.floor(scatterData.length/2)].x;
+
+  // Color by kuadran
+  const scColors = scatterData.map(p=>{
+    if(p.x>=medianX && p.y>=avgGrowth) return CLR.teal;
+    if(p.x<medianX  && p.y>=avgGrowth) return CLR.oranye;
+    if(p.x>=medianX && p.y<avgGrowth)  return CLR.amber;
+    return '#94a3b8';
+  });
+
+  mkChart('chart-scatter',{
+    type:'scatter',
+    data:{datasets:[{
+      label:'Provinsi',
+      data:scatterData,
+      backgroundColor:scColors,
+      pointRadius:7,
+      pointHoverRadius:9,
+    },{
+      label:'Rata-rata Pertumbuhan',
+      data:[{x:0,y:avgGrowth},{x:Math.max(...scatterData.map(p=>p.x))*1.05,y:avgGrowth}],
+      type:'line',borderColor:CLR.oranye,borderDash:[5,3],borderWidth:1.5,pointRadius:0,fill:false,
+    },{
+      label:'Median Ukuran',
+      data:[{x:medianX,y:-30},{x:medianX,y:Math.max(...scatterData.map(p=>p.y))*1.1}],
+      type:'line',borderColor:CLR.teal,borderDash:[5,3],borderWidth:1.5,pointRadius:0,fill:false,
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{
+          label:ctx=>{
+            if(ctx.datasetIndex!==0) return null;
+            const p=ctx.raw;
+            return[p.label,`TK: ${fmt(p.x)}`,`Tumbuh: ${p.y>0?'+':''}${p.y}%`];
+          }
+        }}
+      },
+      scales:{
+        x:{ticks:{font:{size:9},callback:v=>fmtM(v)},grid:{color:'#e7e3da'},title:{display:true,text:'Total TK Aktif (Desember 2025)',font:{size:10}}},
+        y:{ticks:{font:{size:9},callback:v=>v+'%'},grid:{color:'#e7e3da'},title:{display:true,text:'Pertumbuhan Jan→Des (%)',font:{size:10}}}
+      }
+    }
+  });
+
+  // === CHART 3: PRODUKTIVITAS NILAI PER KLAIM ===
+  const prodData = [...provDec]
+    .map(p=>({prov:p.prov, vpk:p.klaim>0?Math.round(p.nilai/p.klaim):0}))
+    .sort((a,b)=>b.vpk-a.vpk);
+  const nasVpk = nilaiPerKlaim;
+  const prodColors = prodData.map(p=>p.vpk>=nasVpk?CLR.biru:'rgba(30,58,95,.4)');
+
+  mkChart('chart-produktivitas',{type:'bar',data:{
+    labels:prodData.map(p=>p.prov),
+    datasets:[
+      {label:'Nilai per Klaim (Rp)',data:prodData.map(p=>p.vpk),backgroundColor:prodColors,borderRadius:3},
+      {label:'Rata-rata Nasional',data:Array(prodData.length).fill(nasVpk),
+       type:'line',borderColor:CLR.oranye,borderDash:[5,3],borderWidth:2,pointRadius:0,fill:false},
+    ]
+  },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' Rp '+fmt(c.parsed.x)}}},
+    scales:{
+      x:{ticks:{font:{size:9},callback:v=>'Rp '+fmtM(v)},grid:{color:'#e7e3da'}},
+      y:{ticks:{font:{size:9}},grid:{display:false}}
+    }
+  }});
+
+  // === CHART 4: CLAIM RATE per provinsi ===
+  const crData = [...provDec]
+    .map(p=>({prov:p.prov, cr:p.total_tk>0?(p.klaim/p.total_tk*100):0}))
+    .sort((a,b)=>b.cr-a.cr);
+  const nasClaimRate = parseFloat(claimRateNas);
+  const crColors = crData.map(p=>p.cr>=nasClaimRate?CLR.teal:'rgba(13,116,144,.4)');
+
+  mkChart('chart-claimrate',{type:'bar',data:{
+    labels:crData.map(p=>p.prov),
+    datasets:[
+      {label:'Claim Rate (%)',data:crData.map(p=>parseFloat(p.cr.toFixed(2))),backgroundColor:crColors,borderRadius:3},
+      {label:'Rata-rata Nasional',data:Array(crData.length).fill(nasClaimRate),
+       type:'line',borderColor:CLR.oranye,borderDash:[5,3],borderWidth:2,pointRadius:0,fill:false},
+    ]
+  },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.x.toFixed(2)}%`}}},
+    scales:{
+      x:{ticks:{font:{size:9},callback:v=>v+'%'},grid:{color:'#e7e3da'}},
+      y:{ticks:{font:{size:9}},grid:{display:false}}
+    }
+  }});
+
+  // === CHART 5: KONSENTRASI ===
+  const top5sorted = [...provDec].sort((a,b)=>b.total_tk-a.total_tk).slice(0,5);
+  const others = totalTK - top5sorted.reduce((s,p)=>s+p.total_tk,0);
+  mkChart('chart-konsentrasi',{type:'doughnut',data:{
+    labels:[...top5sorted.map(p=>p.prov),'29 Provinsi Lainnya'],
+    datasets:[{
+      data:[...top5sorted.map(p=>p.total_tk), others],
+      backgroundColor:[CLR.biru,CLR.teal,CLR.oranye,CLR.amber,'#475569','#94a3b8'],
+      borderWidth:2,borderColor:'#fff'
+    }]
+  },options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
+    plugins:{legend:{position:'bottom',labels:{font:{size:10},padding:8}},
+      tooltip:{callbacks:{label:c=>` ${fmt(c.parsed)} (${(c.parsed/totalTK*100).toFixed(1)}%)`}}
+    }
+  }});
+
+  // Detail tabel konsentrasi
+  document.getElementById('konsentrasi-detail').innerHTML=`
+    <div class="tbl-wrap"><table style="min-width:auto">
+      <thead><tr><th class="left" style="font-size:10px">Provinsi</th><th style="font-size:10px">Total TK</th><th style="font-size:10px">% Nasional</th></tr></thead>
+      <tbody>${top5sorted.map((p,i)=>`<tr>
+        <td class="left" style="font-size:11px">${i+1}. ${p.prov}</td>
+        <td style="font-size:11px">${fmt(p.total_tk)}</td>
+        <td style="font-size:11px;font-weight:700;color:var(--biru)">${(p.total_tk/totalTK*100).toFixed(1)}%</td>
+      </tr>`).join('')}
+      <tr style="background:var(--abu)">
+        <td class="left" style="font-size:11px;font-weight:700">29 Provinsi Lainnya</td>
+        <td style="font-size:11px;font-weight:700">${fmt(others)}</td>
+        <td style="font-size:11px;font-weight:700;color:var(--teks2)">${(others/totalTK*100).toFixed(1)}%</td>
+      </tr></tbody>
+    </table></div>`;
+
+  // === CHART 6: COVERAGE RATE ===
+  mkChart('chart-coverage',{type:'bar',data:{
+    labels:['BPJS TK vs\nAngkatan Kerja','BPJS TK vs\nPenduduk Bekerja','Pekerja\nFormal (2024)'],
+    datasets:[
+      {label:'Coverage (%)',data:[parseFloat(cov_ak),parseFloat(cov_pb),(totalTK/60810000*100).toFixed(1)],
+       backgroundColor:[CLR.biru,CLR.teal,CLR.oranye],borderRadius:6},
+      {label:'Target 100%',data:[100,100,100],
+       type:'line',borderColor:'rgba(0,0,0,.15)',borderDash:[4,3],borderWidth:1,pointRadius:0,fill:false},
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>` ${c.parsed.y}%`}}
+    },
+    scales:{
+      x:{ticks:{font:{size:10}},grid:{display:false}},
+      y:{min:0,max:100,ticks:{font:{size:10},callback:v=>v+'%'},grid:{color:'#e7e3da'},
+        title:{display:true,text:'Coverage (%)',font:{size:10}}}
+    }
+  }});
+}
+
 // =============================================
 // INIT
 // =============================================
@@ -827,6 +1597,8 @@ document.addEventListener('DOMContentLoaded',()=>{
         initTren();
         initProvinsi();
         initKlaim();
+        initAnalisis();
+        initProgram();
       }
     }
   },100);
